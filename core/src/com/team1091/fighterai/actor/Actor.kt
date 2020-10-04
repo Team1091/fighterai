@@ -23,9 +23,9 @@ open class Actor(
         val expiration: Expiration? = null,
         val radius: Float = 1f,
         val collider: Collider?,
-        val respawnable: Boolean = false
+        val respawnable: Boolean = false,
+        val engine: Engine?
 ) {
-
 
     val instance = ModelInstance(model)
 

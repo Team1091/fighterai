@@ -12,7 +12,7 @@ class HumanPilot(val controller: Controller) : Pilot {
     override fun fly(fighterGame: FighterAIGame, us: Actor): PilotControl {
         with(us) {
 
-            if (aircraftType == null) {
+            if (engine == null) {
                 return PilotControl()
             }
 

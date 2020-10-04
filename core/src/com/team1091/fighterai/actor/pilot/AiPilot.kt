@@ -118,7 +118,7 @@ class AiPilot : Pilot {
             if (mode == AiState.ATTACK) {
                 accelp = 1f
             } else { // retreat
-                accelp = 0.25f
+                accelp = 1f
             }
 
         }

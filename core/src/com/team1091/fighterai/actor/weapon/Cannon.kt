@@ -23,7 +23,8 @@ class Cannon(val bulletType: BulletType) : Launcher(bulletType.refireMS, bulletT
                 bulletType.model,
                 expiration = Expiration(bulletType.expiration),
                 radius = bulletType.radius,
-                collider = DamageAndDisappearCollider(bulletType.damage)
+                collider = DamageAndDisappearCollider(bulletType.damage),
+                engine = null
         ))
     }
 

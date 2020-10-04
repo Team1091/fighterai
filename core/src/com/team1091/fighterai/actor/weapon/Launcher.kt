@@ -10,10 +10,10 @@ abstract class Launcher(
         val refireMS: Long,
         val launchVelocity: Float,
         val tubeOffsets: List<Vector3> = listOf(
-                right.cpy().scl(1f).add(forward),
-                left.cpy().scl(1f).add(forward),
-                up.cpy().scl(1f).add(forward),
-                down.cpy().scl(1f).add(forward)
+                right.cpy().scl(2f).add(forward),
+                left.cpy().scl(2f).add(forward),
+//                up.cpy().scl(2f).add(forward),
+//                down.cpy().scl(2f).add(forward)
         )
 ) : Weapon {
 
@@ -32,7 +32,7 @@ abstract class Launcher(
             project(
                     fighterGame,
                     shooter,
-                    shooter.position.cpy().add(offset),
+                    shooter.position.cpy().add(offset.cpy().mul(shooter.rotation)),
                     shooter.rotation.cpy(),
                     shooter.velocity + launchVelocity
             )

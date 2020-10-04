@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
+import com.team1091.fighterai.actor.Engine
 
 enum class MissileType(
         val refireMS: Long,
@@ -12,9 +13,8 @@ enum class MissileType(
         val radius: Float = 0.3f,
         var model: Model,
         val launchVelocity: Float = 5f,
-        val acceleration: Float = 20f, // TODO: missiles dont seem to use this or turn
-        val turn: Float = 30f,
-        val expiration: Long
+        val expiration: Long,
+        val engine: Engine
 ) {
     //TODO: add guidance system
 
@@ -22,12 +22,16 @@ enum class MissileType(
             refireMS = 3000,
             damage = 20f,
             explosionRadius = 5f,
-            acceleration = 35f,
-            turn = 65f,
             expiration = 10000,
             model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
-                    Material(ColorAttribute.createDiffuse(Color.CYAN)),
+                    Material(ColorAttribute.createDiffuse(Color.BLACK)),
                     attr
+            ),
+            engine =  Engine(
+                    maxAccel =70f,
+                    maxYaw = 65f,
+                    maxRoll = 65f,
+                    maxPitch = 65f
             )
 
     ),
@@ -35,14 +39,19 @@ enum class MissileType(
             refireMS = 1000,
             damage = 10f,
             explosionRadius = 5f,
-            acceleration = 25f,
             expiration = 8000,
             model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
                     Material(ColorAttribute.createDiffuse(Color.CYAN)),
                     attr
+            ),
+            engine =  Engine(
+                    maxAccel = 80f,
+                    maxYaw = 0f,
+                    maxRoll = 0f,
+                    maxPitch = 0f
             )
 
-    )
+    );
 //    , // bot weapon
 //    ANACONDA(
 //            refireMS = 20000,

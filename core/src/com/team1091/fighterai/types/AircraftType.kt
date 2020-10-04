@@ -5,31 +5,38 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
+import com.team1091.fighterai.actor.Engine
 
 enum class AircraftType(
-        val acceleration: Float = 0f,
-        val turn: Float = 0f,
-        val turnYaw: Float = turn,
         var model: Model,
         val life: Float = 1f,
-        val radius: Float = 1f
+        val radius: Float = 1f,
+        val engine: Engine
 ) {
     RAPTOR(
-            acceleration = 50f,
-            turn = 80f,
-            turnYaw = 60f,
+
             life = 30f,
             radius = 1f,
-            model = loader.loadModel(Gdx.files.internal("F_22_Raptor.obj"))
+            model = loader.loadModel(Gdx.files.internal("F_22_Raptor.obj")),
+            engine = Engine(
+                    maxAccel = 50f,
+                    maxYaw = 60f,
+                    maxRoll = 80f,
+                    maxPitch = 80f
+            )
     ),
     BALLOON(
-            acceleration = 0f,
-            turn = 0f,
             life = 30f,
             radius = 1f,
             model = modelBuilder.createCylinder(1f, 1f, 1f, 8,
                     Material(ColorAttribute.createDiffuse(Color.ORANGE)),
-                    attr)
+                    attr),
+            engine = Engine(
+                    maxAccel = 0f,
+                    maxYaw = 0f,
+                    maxRoll = 0f,
+                    maxPitch = 0f
+            )
     ),
     STORAGE(
             life = 100f,
@@ -37,7 +44,14 @@ enum class AircraftType(
             model = modelBuilder.createBox(10f, 10f, 10f,
                     Material(ColorAttribute.createDiffuse(Color.SALMON)),
                     attr
+            ),
+            engine = Engine(
+                    maxAccel = 0f,
+                    maxYaw = 0f,
+                    maxRoll = 0f,
+                    maxPitch = 0f
             )
+
     )
 
 }

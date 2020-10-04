@@ -117,7 +117,7 @@ class FighterAIGame : ApplicationAdapter() {
 
         } else {
 
-            val randomActor = actors.find { it.aircraftType != null }
+            val randomActor = actors.find { it.engine != null }
 
             if (randomActor != null) {
                 cam.position.set(randomActor.position.cpy().add(Vector3(0f, -5f, 1f).mul(randomActor.rotation)))
@@ -154,16 +154,16 @@ class FighterAIGame : ApplicationAdapter() {
         // Simulate
         for (craft in actors) {
 
-            if (craft.pilot != null && craft.aircraftType != null) {
+            if (craft.pilot != null ) {
                 val pilotControl = craft.pilot.fly(this, craft)
 
-                //TODO: this needs to use missile type if a missile.
-                val aircraftType = craft.aircraftType
-
-                craft.rotation.mul(Quaternion(up, -1f * pilotControl.yawp * aircraftType.turnYaw * dt))
-                craft.rotation.mul(Quaternion(right, pilotControl.pitchp * aircraftType.turn * dt))
-                craft.rotation.mul(Quaternion(forward, pilotControl.rollp * aircraftType.turn * dt))
-                craft.velocity += pilotControl.accelp * aircraftType.acceleration * dt // Speed up
+                // If we have an engine, control us
+                 craft.engine?.also {  engine ->
+                     craft.rotation.mul(Quaternion(up, -1f * pilotControl.yawp * engine.maxYaw * dt))
+                     craft.rotation.mul(Quaternion(right, pilotControl.pitchp * engine.maxPitch * dt))
+                     craft.rotation.mul(Quaternion(forward, pilotControl.rollp * engine.maxRoll * dt))
+                     craft.velocity += pilotControl.accelp * engine.maxAccel * dt // Speed up
+                 }
 
                 // if primary shoot
                 if (pilotControl.primaryWeapon) {
@@ -265,7 +265,7 @@ class FighterAIGame : ApplicationAdapter() {
 
 //                shapeRenderer.rect
                 for (craft in actors) {
-                    if (craft.aircraftType != null && craft != player) {
+                    if (craft.engine != null && craft != player) {
                         val pointerToCraft = craft.position.cpy().sub(player.position).mul(conj)
                         val dist = pointerToCraft.dst(0f, 0f, 0f)
                         val x = pointerToCraft.x / dist

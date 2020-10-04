@@ -122,7 +122,8 @@ enum class Place(
                                     primaryWeapon = Cannon(BulletType.M61_VULCAN),
                                     secondaryWeapon = MissileRack(MissileType.AMRAAM),
                                     collider = DamageCollider(4f),
-                                    respawnable = true
+                                    respawnable = true,
+                                    engine = aircraftType.engine
                             )
                     )
                 }

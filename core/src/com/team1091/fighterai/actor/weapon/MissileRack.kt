@@ -3,10 +3,7 @@ package com.team1091.fighterai.actor.weapon
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.FighterAIGame
-import com.team1091.fighterai.actor.Actor
-import com.team1091.fighterai.actor.DamageCollider
-import com.team1091.fighterai.actor.Expiration
-import com.team1091.fighterai.actor.Life
+import com.team1091.fighterai.actor.*
 import com.team1091.fighterai.actor.pilot.MissileGuidance
 import com.team1091.fighterai.actor.pilot.beingAimedAtBy
 import com.team1091.fighterai.types.MissileType
@@ -20,8 +17,8 @@ class MissileRack(val missileType: MissileType) : Launcher(
 
         // find a target
         val target: Actor? = fighterGame.actors.asSequence()
-                .filter { it.aircraftType != null && it != shooter }
-//                .filter { it.faction.isEnemy(shooter.faction) }
+                .filter { it.engine != null && it != shooter }
+                .filter { it.faction.isEnemy(shooter.faction) }
                 .filter { it beingAimedAtBy shooter }
                 .minByOrNull { shooter.position.dst2(it.position) }
 
@@ -43,7 +40,8 @@ class MissileRack(val missileType: MissileType) : Launcher(
                 life = Life(1f),
                 expiration = Expiration(missileType.expiration),
                 radius = missileType.radius,
-                collider = DamageCollider(1f)
+                collider = DamageCollider(1f),
+                engine = missileType.engine
         ))
 
     }

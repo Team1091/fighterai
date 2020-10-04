@@ -74,7 +74,7 @@ fun findInForwardArc(
 ): Actor? {
 
     return fighterGame.actors.asSequence()
-            .filter { it != us && it.aircraftType != null }
+            .filter { it != us && it.engine != null }
             .filter {
                 maxDist == null || it.position.dst(us.position) < maxDist
             }
