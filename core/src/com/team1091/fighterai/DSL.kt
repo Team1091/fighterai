@@ -99,16 +99,19 @@ enum class Place(
 //                    fighterGame.players.add(actor)
 //                }
 
-                mapOf(
-                        AiPilot() to PlayerStart.LEFT,
-                        AiPilot() to PlayerStart.RIGHT
-                ).forEach { pilot, playerStart ->
+                listOf(
+                        Triple(AiPilot(), PlayerStart.LEFT, Faction.BLUE),
+                        Triple(AiPilot(), PlayerStart.RIGHT, Faction.RED)
+                ).forEach {
+
+                    val (pilot, playerStart, faction) = it
 
                     val aircraftType = AircraftType.RAPTOR
 
                     fighterGame.actors.add(
                             Actor(
-                                    callsign = pilot.javaClass.name,
+                                    callsign = faction.name + " " + pilot.javaClass.simpleName,
+                                    faction = faction,
                                     position = playerStart.pos.cpy(),
                                     rotation = playerStart.rotation.cpy(),
                                     velocity = 300f,
@@ -178,7 +181,7 @@ val campaign = Campaign(
                         Place.DESERT,
                         listOf(
                                 FlightGroup(
-                                        Faction.BLUE,
+                                        Faction.RED,
                                         aircraftType = AircraftType.BALLOON,
                                         qty = 1,
                                         placement = Placement.X_NEG
@@ -187,7 +190,7 @@ val campaign = Campaign(
                                         Faction.BLUE,
                                         aircraftType = AircraftType.STORAGE,
                                         qty = 1,
-                                        placement = Placement.GRID
+                                        placement = Placement.X_POS
                                 )
                         )
 

@@ -298,7 +298,7 @@ class FighterAIGame : ApplicationAdapter() {
             respawnActors.forEach {
 
                 val start = PlayerStart.values()[Random().nextInt(PlayerStart.values().size)]
-                Gdx.app.log("start", start.name)
+                Gdx.app.log(it.callsign, start.name)
                 it.position.set(start.pos)
                 it.rotation.set(start.rotation)
                 it.velocity = 300f

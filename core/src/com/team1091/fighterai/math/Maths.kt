@@ -70,7 +70,7 @@ fun findInForwardArc(
         us: Actor,
         maxDist: Float? = null,
         maxAngle: Float? = null,
-        enemyOnly: Boolean? = null
+        enemyOnly: Boolean = false
 ): Actor? {
 
     return fighterGame.actors.asSequence()
@@ -82,7 +82,7 @@ fun findInForwardArc(
                 maxAngle == null || us angleTo it < maxAngle
             }
             .filter {
-                enemyOnly == null || us.faction.isEnemy(it.faction)
+                !enemyOnly || us.faction.isEnemy(it.faction)
             }
             .minByOrNull {
                 it.position.dst(us.position)

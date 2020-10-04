@@ -36,7 +36,7 @@ abstract class Launcher(
                     shooter.rotation.cpy(),
                     shooter.velocity + launchVelocity
             )
-            Gdx.app.log("Launch", "${shooter.callsign} fired a missile")
+            Gdx.app.log(shooter.callsign, "Fired a missile")
             lastFired = millis
         }
     }

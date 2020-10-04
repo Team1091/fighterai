@@ -10,7 +10,7 @@ You need this to take damage, for how do you kill that which has no life?
 class Life(val max: Float, var cur: Float = max) {
 
     fun takeDamage(fighterGame: FighterAIGame, actor: Actor, float: Float) {
-        Gdx.app.log("Aircraft", "${actor.callsign} took $float damage")
+        Gdx.app.log(actor.callsign, "Took $float damage")
         cur -= float
 
         if (cur <= 0) {
@@ -24,7 +24,7 @@ class Life(val max: Float, var cur: Float = max) {
         if (actor.respawnable) {
             fighterGame.respawnActors.add(actor)
         }
-        Gdx.app.log("Destruction", "Target Exploded")
+        Gdx.app.log(actor.callsign, "Exploded")
     }
 
 }

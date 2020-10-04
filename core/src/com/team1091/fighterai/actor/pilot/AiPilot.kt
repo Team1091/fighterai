@@ -1,5 +1,6 @@
 package com.team1091.fighterai.actor.pilot
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.FighterAIGame
 import com.team1091.fighterai.actor.Actor
@@ -9,7 +10,9 @@ import com.team1091.fighterai.math.turnTowards
 import com.team1091.fighterai.types.up
 import kotlin.math.max
 
-// This is an example ai pilot
+/*
+ This is an example ai pilot
+ */
 class AiPilot : Pilot {
 
     var lastTarget: Actor? = null
@@ -24,6 +27,7 @@ class AiPilot : Pilot {
             val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
             var (pitchp, yawp, rollp) = turnTowards(localUp)
 
+            Gdx.app.log(us.callsign, "Emergency pull up")
             return PilotControl(
                     pitchp = pitchp,
                     yawp = yawp,
@@ -40,6 +44,9 @@ class AiPilot : Pilot {
         // find a target, close and in front of us are good ideas
         if (lastTargetTime + 1000 < time) {
             target = findInForwardArc(fighterGame, us = us, enemyOnly = true)
+//            if(target==null){
+//                Gdx.app.log(us.callsign, "Could not find Enemy")
+//            }
             lastTarget = target
             lastTargetTime = time
         } else {
@@ -49,7 +56,7 @@ class AiPilot : Pilot {
 
         if (target == null) {
             // if we dont have a target, get in formation?
-            return PilotControl()
+            return PilotControl(accelp = 1f)
         }
 
         val dist = us.position.dst(target.position)
@@ -58,11 +65,11 @@ class AiPilot : Pilot {
         // if we are in retreat mode and too far away, switch to attack mode
         val towards = when (mode) {
             AiState.ATTACK -> {
-                if (dist < 200f) mode = AiState.RETREAT
+                if (dist < 100f) mode = AiState.RETREAT
                 1f
             }
             AiState.RETREAT -> {
-                if (dist > 1200f)
+                if (dist > 300f)
                     mode = AiState.ATTACK
 
 //                    else if (us beingAimedAtBy target)
@@ -98,7 +105,7 @@ class AiPilot : Pilot {
                 secondary = true
             }
 
-            if (dist < 500 && mode == AiState.ATTACK) {
+            if (dist < 300 && mode == AiState.ATTACK) {
 
                 accelp = 0.25f
                 primary = true
@@ -126,7 +133,6 @@ class AiPilot : Pilot {
         )
 
     }
-
 
 }
 
