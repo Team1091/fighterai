@@ -25,14 +25,14 @@ class AiPilot : Pilot {
         if (us.position.z < 30) {
             // figure out how we are rotated, and which way up is.
             val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
-            var (pitchp, yawp, rollp) = turnTowards(localUp)
+            var (pitch, yaw, roll) = turnTowards(localUp)
 
             Gdx.app.log(us.callsign, "Emergency pull up")
             return PilotControl(
-                    pitchp = pitchp,
-                    yawp = yawp,
-                    rollp = rollp,
-                    accelp = 1f,
+                    pitch = pitch,
+                    yaw = yaw,
+                    roll = roll,
+                    accel = 1f,
                     primaryWeapon = false,
                     secondaryWeapon = false
             )
@@ -56,7 +56,7 @@ class AiPilot : Pilot {
 
         if (target == null) {
             // if we dont have a target, get in formation?
-            return PilotControl(accelp = 1f)
+            return PilotControl(accel = 1f)
         }
 
         val dist = us.position.dst(target.position)
@@ -97,7 +97,7 @@ class AiPilot : Pilot {
 
         var primary = false
         var secondary = false
-        var accelp:Float
+        var accelp: Float
         if (unRotatedTargetOffset.y > 0) { // They are in front of  us
 
             // if we are close enough, shoot
@@ -124,10 +124,10 @@ class AiPilot : Pilot {
         }
 
         return PilotControl(
-                pitchp = pitchp * towards,
-                yawp = yawp * towards,
-                rollp = rollp * towards,
-                accelp = accelp,
+                pitch = pitchp * towards,
+                yaw = yawp * towards,
+                roll = rollp * towards,
+                accel = accelp,
                 primaryWeapon = primary,
                 secondaryWeapon = secondary
         )

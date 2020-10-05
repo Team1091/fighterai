@@ -16,7 +16,6 @@ class MissileGuidance(val target: Actor, val missileType: MissileType) : Pilot {
         if (target.position.dst(us.position) < missileType.explosionRadius) {
 
 
-
             // TODO: move to detonate
             fighterGame.actors
                     .filter { it.position.dst(us.position) < missileType.explosionRadius }
@@ -37,13 +36,13 @@ class MissileGuidance(val target: Actor, val missileType: MissileType) : Pilot {
 
         val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())
 
-        var (pitchp, yawp, rollp) = turnTowards(unRotatedTargetOffset)
+        var (pitch, yaw, roll) = turnTowards(unRotatedTargetOffset)
 
 
         return PilotControl(
-                pitchp = pitchp,
-                yawp = yawp,
-                accelp = if (unRotatedTargetOffset.y > 0) 1f else 0.25f
+                pitch = pitch,
+                yaw = yaw,
+                accel = if (unRotatedTargetOffset.y > 0) 1f else 0.25f
         )
 
 

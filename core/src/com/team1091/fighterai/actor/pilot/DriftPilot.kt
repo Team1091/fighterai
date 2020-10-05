@@ -8,9 +8,9 @@ import java.util.*
 class DriftPilot : Pilot {
 
     val control = PilotControl(
-            pitchp = Random().nextFloat(),
-            yawp = Random().nextFloat(),
-            rollp = Random().nextFloat()
+            pitch = Random().nextFloat(),
+            yaw = Random().nextFloat(),
+            roll = Random().nextFloat()
     )
 
     override fun fly(fighterGame: FighterAIGame, us: Actor) = control

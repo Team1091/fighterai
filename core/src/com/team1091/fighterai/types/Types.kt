@@ -10,9 +10,13 @@ val modelBuilder = ModelBuilder()
 val loader = ObjLoader()
 
 // Some basis Vectors
+// Make sure you .cpy() these before you modify them
+// Kotlin ->  up.cpy()
+// Java   ->  TypesKt.getUp().cpy()
 val up = Vector3(0f, 0f, 1f)
 val down = Vector3(0f, 0f, -1f)
 val forward = Vector3(0f, 1f, 0f)
 val backward = Vector3(0f, -1f, 0f)
 val right = Vector3(1f, 0f, 0f)
 val left = Vector3(-1f, 0f, 0f)
+

@@ -57,12 +57,20 @@ fun deaden(value: Float): Float {
 }
 
 
-fun turnTowards(unRotatedTargetOffset: Vector3): Triple<Float, Float, Float> {
-    var pitchp = if (unRotatedTargetOffset.z > 0f) 1f else -1f
-    var yawp = if (unRotatedTargetOffset.x > 0f) 1f else -1f
-    var rollp = yawp
-    return Triple(pitchp, yawp, rollp)
-}
+fun turnTowards(unRotatedTargetOffset: Vector3): StickPosition =
+        StickPosition(
+                pitch = if (unRotatedTargetOffset.z > 0f) 1f else -1f,
+                yaw = if (unRotatedTargetOffset.x > 0f) 1f else -1f,
+                roll = if (unRotatedTargetOffset.x > 0f) 1f else -1f
+        )
+
+
+data class StickPosition(
+        var pitch: Float,
+        var yaw: Float,
+        var roll: Float
+)
+
 
 // Used to find a target in the forward arc, closest first.
 fun findInForwardArc(

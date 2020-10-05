@@ -154,16 +154,16 @@ class FighterAIGame : ApplicationAdapter() {
         // Simulate
         for (craft in actors) {
 
-            if (craft.pilot != null ) {
+            if (craft.pilot != null) {
                 val pilotControl = craft.pilot.fly(this, craft)
 
                 // If we have an engine, control us
-                 craft.engine?.also {  engine ->
-                     craft.rotation.mul(Quaternion(up, -1f * pilotControl.yawp * engine.maxYaw * dt))
-                     craft.rotation.mul(Quaternion(right, pilotControl.pitchp * engine.maxPitch * dt))
-                     craft.rotation.mul(Quaternion(forward, pilotControl.rollp * engine.maxRoll * dt))
-                     craft.velocity += pilotControl.accelp * engine.maxAccel * dt // Speed up
-                 }
+                craft.engine?.also { engine ->
+                    craft.rotation.mul(Quaternion(up, -1f * pilotControl.yaw * engine.maxYaw * dt))
+                    craft.rotation.mul(Quaternion(right, pilotControl.pitch * engine.maxPitch * dt))
+                    craft.rotation.mul(Quaternion(forward, pilotControl.roll * engine.maxRoll * dt))
+                    craft.velocity += pilotControl.accel * engine.maxAccel * dt // Speed up
+                }
 
                 // if primary shoot
                 if (pilotControl.primaryWeapon) {
