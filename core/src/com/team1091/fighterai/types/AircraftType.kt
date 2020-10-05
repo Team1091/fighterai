@@ -14,10 +14,20 @@ enum class AircraftType(
         val engine: Engine
 ) {
     RAPTOR(
-
             life = 30f,
             radius = 1f,
             model = loader.loadModel(Gdx.files.internal("F_22_Raptor.obj")),
+            engine = Engine(
+                    maxAccel = 50f,
+                    maxYaw = 60f,
+                    maxRoll = 80f,
+                    maxPitch = 80f
+            )
+    ),
+    X56(
+            life = 30f,
+            radius = 1f,
+            model = loader.loadModel(Gdx.files.internal("drone-swept.obj")),
             engine = Engine(
                     maxAccel = 50f,
                     maxYaw = 60f,
