@@ -26,9 +26,7 @@ open class Actor(
         val respawnable: Boolean = false,
         val engine: Engine?
 ) {
-
     val instance = ModelInstance(model)
-
 
     init {
         instance.transform.setToTranslation(position).rotate(rotation)

@@ -25,8 +25,7 @@ class MissileGuidance(val target: Actor, val missileType: MissileType) : Pilot {
             // destroy ourselves
             fighterGame.removeActors.add(us)
         }
-
-
+        
         // else calculate where they will be, and fly towards that location
         val solution = leadTarget(
                 us.position,
@@ -39,14 +38,10 @@ class MissileGuidance(val target: Actor, val missileType: MissileType) : Pilot {
 
         var (pitchp, yawp, rollp) = turnTowards(unRotatedTargetOffset)
 
-
         return PilotControl(
                 pitchp = pitchp,
                 yawp = yawp,
                 accelp = if (unRotatedTargetOffset.y > 0) 1f else 0.25f
         )
-
-
     }
-
 }
