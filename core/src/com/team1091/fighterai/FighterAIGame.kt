@@ -9,18 +9,17 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.ModelBatch
-import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Actor
-import com.team1091.fighterai.types.*
+import com.team1091.fighterai.types.AircraftType
+import com.team1091.fighterai.types.BulletType
+import com.team1091.fighterai.types.MissileType
+import com.team1091.fighterai.types.up
 import java.lang.Integer.max
-import java.util.*
-import kotlin.math.pow
 
 class FighterAIGame : ApplicationAdapter() {
-
 
     //    https://stackoverflow.com/questions/17902373/split-screen-in-libgdx
     internal lateinit var cam: PerspectiveCamera
@@ -29,18 +28,10 @@ class FighterAIGame : ApplicationAdapter() {
     internal lateinit var shapeRenderer: ShapeRenderer
 //    internal lateinit var envCubemap: EnvironmentCubemap
 
-    val actors = mutableListOf<Actor>()
-    val newActors = mutableListOf<Actor>()
-    val removeActors = mutableListOf<Actor>()
-    var respawnActors = mutableListOf<Actor>()
-
-    var otherGeometry = mutableListOf<ModelInstance>()
-
-//	internal lateinit var asteroidModels: Array<Model>
+    val world = World()
 
     var splitScreen: SplitScreen = SplitScreen.ONE
     var players = mutableListOf<Actor>()
-
     val audio: AudioManager = AudioManager()
 
     override fun create() {
@@ -72,11 +63,11 @@ class FighterAIGame : ApplicationAdapter() {
 
         // Setup of scenario
         environment = mission.place.environment
-        mission.place.props(this)
+        mission.place.props(world)
 
 
         val controllers = Controllers.getControllers().take(4)
-        mission.place.ships(this, controllers)
+        mission.place.ships(world, controllers)
         println("Controllers " + controllers)
 
         splitScreen = when (controllers.size) {
@@ -105,7 +96,7 @@ class FighterAIGame : ApplicationAdapter() {
 
             // TODO: comment this is for an overview
         } else if (true) {
-            val anActor = actors.firstOrNull { it.life != null && it.life.cur > 0 }
+            val anActor = world.actors.firstOrNull { it.life != null && it.life.cur > 0 }
 
             cam.up.set(0f, 0f, 1f)
             cam.position.set(200f, 200f, 150f)
@@ -117,7 +108,7 @@ class FighterAIGame : ApplicationAdapter() {
 
         } else {
 
-            val randomActor = actors.find { it.engine != null }
+            val randomActor = world.actors.find { it.engine != null }
 
             if (randomActor != null) {
                 cam.position.set(randomActor.position.cpy().add(Vector3(0f, -5f, 1f).mul(randomActor.rotation)))
@@ -151,58 +142,9 @@ class FighterAIGame : ApplicationAdapter() {
         val dt = Gdx.graphics.deltaTime
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
-        // Simulate
-        for (craft in actors) {
 
-            if (craft.pilot != null) {
-                val pilotControl = craft.pilot.fly(this, craft)
+        world.simulate(dt)
 
-                // If we have an engine, control us
-                craft.engine?.also { engine ->
-                    craft.rotation.mul(Quaternion(up, -1f * pilotControl.yaw * engine.maxYaw * dt))
-                    craft.rotation.mul(Quaternion(right, pilotControl.pitch * engine.maxPitch * dt))
-                    craft.rotation.mul(Quaternion(forward, pilotControl.roll * engine.maxRoll * dt))
-                    craft.velocity += pilotControl.accel * engine.maxAccel * dt // Speed up
-                }
-
-                // if primary shoot
-                if (pilotControl.primaryWeapon) {
-                    craft.primaryWeapon?.fire(this, craft)
-                }
-
-                // if secondary shoot
-                if (pilotControl.secondaryWeapon) {
-                    craft.secondaryWeapon?.fire(this, craft)
-                }
-            }
-
-            with(craft) {
-                velocity *= 1f - (0.8f * dt) // Slow down, air resistance?
-
-                position.add(Vector3(0f, velocity * dt, 0f).mul(rotation))
-                instance.transform.setToTranslation(position).rotate(rotation)
-            }
-
-            if (craft.position.z < 0) { // ground hit
-                craft.life?.die(this, craft)
-            }
-
-            if (craft.expiration != null) {
-                craft.expiration.check(this, craft)
-            }
-        }
-
-        // this will be inefficient, we may need to fix that if we want to support large battles
-        for (i in (0 until actors.size)) {
-            for (j in (i + 1 until actors.size)) {
-                // test collision
-                if (actors[i].position.dst2(actors[j].position) <= (actors[i].radius + actors[j].radius).pow(2)) {
-                    // collide
-                    actors[i].collider?.collision(this, actors[i], actors[j])
-                    actors[j].collider?.collision(this, actors[j], actors[i])
-                }
-            }
-        }
 
         // Render
         for (i in 0 until max(players.size, 1)) {
@@ -240,10 +182,10 @@ class FighterAIGame : ApplicationAdapter() {
             //envCubemap.render(cam)
 
             modelBatch.begin(cam)
-            for (model in otherGeometry) {
+            for (model in world.otherGeometry) {
                 modelBatch.render(model, environment)
             }
-            for (craft in actors) {
+            for (craft in world.actors) {
                 modelBatch.render(craft.instance, environment)
             }
             modelBatch.end()
@@ -264,7 +206,7 @@ class FighterAIGame : ApplicationAdapter() {
                 shapeRenderer.rect(200f, 0f, 200f, 200f)
 
 //                shapeRenderer.rect
-                for (craft in actors) {
+                for (craft in world.actors) {
                     if (craft.engine != null && craft != player) {
                         val pointerToCraft = craft.position.cpy().sub(player.position).mul(conj)
                         val dist = pointerToCraft.dst(0f, 0f, 0f)
@@ -285,32 +227,6 @@ class FighterAIGame : ApplicationAdapter() {
 
         }
 
-        // to prevent concurrent modification exceptions
-        actors.addAll(newActors)
-        newActors.clear()
-
-        if (removeActors.isNotEmpty()) {
-            actors.removeAll(removeActors)
-            removeActors.clear()
-        }
-
-        if (respawnActors.isNotEmpty()) {
-            respawnActors.forEach {
-
-                val start = PlayerStart.values()[Random().nextInt(PlayerStart.values().size)]
-                Gdx.app.log(it.callsign, start.name)
-                it.position.set(start.pos)
-                it.rotation.set(start.rotation)
-                it.velocity = 300f
-                if (it.life != null) {
-                    it.life.cur = it.life.max
-                }
-
-
-                actors.add(it)
-            }
-            respawnActors.clear()
-        }
 
     }
 

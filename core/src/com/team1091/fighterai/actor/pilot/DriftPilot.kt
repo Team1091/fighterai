@@ -1,6 +1,6 @@
 package com.team1091.fighterai.actor.pilot
 
-import com.team1091.fighterai.FighterAIGame
+import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import java.util.*
 
@@ -13,6 +13,6 @@ class DriftPilot : Pilot {
             roll = Random().nextFloat()
     )
 
-    override fun fly(fighterGame: FighterAIGame, us: Actor) = control
+    override fun fly(world: World, us: Actor) = control
 
 }

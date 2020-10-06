@@ -2,7 +2,7 @@ package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.FighterAIGame
+import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.math.findInForwardArc
 import com.team1091.fighterai.math.leadTarget
@@ -19,7 +19,7 @@ class AiPilot : Pilot {
     var lastTargetTime: Long = 0
     var mode: AiState = AiState.ATTACK
 
-    override fun fly(fighterGame: FighterAIGame, us: Actor): PilotControl {
+    override fun fly(world: World, us: Actor): PilotControl {
 
         // Are we diving into the ground?  Lets not.
         if (us.position.z < 30) {
@@ -43,7 +43,7 @@ class AiPilot : Pilot {
 
         // find a target, close and in front of us are good ideas
         if (lastTargetTime + 1000 < time) {
-            target = findInForwardArc(fighterGame, us = us, enemyOnly = true)
+            target = findInForwardArc(world, us = us, enemyOnly = true)
 //            if(target==null){
 //                Gdx.app.log(us.callsign, "Could not find Enemy")
 //            }

@@ -1,7 +1,7 @@
 package com.team1091.fighterai.math
 
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.FighterAIGame
+import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.pilot.angleTo
 import kotlin.math.abs
@@ -74,14 +74,14 @@ data class StickPosition(
 
 // Used to find a target in the forward arc, closest first.
 fun findInForwardArc(
-        fighterGame: FighterAIGame,
+        world: World,
         us: Actor,
         maxDist: Float? = null,
         maxAngle: Float? = null,
         enemyOnly: Boolean = false
 ): Actor? {
 
-    return fighterGame.actors.asSequence()
+    return world.actors.asSequence()
             .filter { it != us && it.engine != null }
             .filter {
                 maxDist == null || it.position.dst(us.position) < maxDist

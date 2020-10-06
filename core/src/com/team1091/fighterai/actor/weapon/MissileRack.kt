@@ -2,8 +2,11 @@ package com.team1091.fighterai.actor.weapon
 
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.FighterAIGame
-import com.team1091.fighterai.actor.*
+import com.team1091.fighterai.World
+import com.team1091.fighterai.actor.Actor
+import com.team1091.fighterai.actor.DamageCollider
+import com.team1091.fighterai.actor.Expiration
+import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.pilot.MissileGuidance
 import com.team1091.fighterai.actor.pilot.beingAimedAtBy
 import com.team1091.fighterai.types.MissileType
@@ -13,10 +16,10 @@ class MissileRack(val missileType: MissileType) : Launcher(
         missileType.refireMS,
         missileType.launchVelocity
 ) {
-    override fun project(fighterGame: FighterAIGame, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float) {
+    override fun project(world: World, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float) {
 
         // find a target
-        val target: Actor? = fighterGame.actors.asSequence()
+        val target: Actor? = world.actors.asSequence()
                 .filter { it.engine != null && it != shooter }
                 .filter { it.faction.isEnemy(shooter.faction) }
                 .filter { it beingAimedAtBy shooter }
@@ -27,10 +30,10 @@ class MissileRack(val missileType: MissileType) : Launcher(
 //            fighterGame.audio.beepFail()
             return
         }
-        // fire
-        fighterGame.audio.launch()
+        // TODO: audio
+        //fighterGame.audio.launch()
 
-        fighterGame.newActors.add(Actor(
+        world.newActors.add(Actor(
                 callsign = "${shooter.callsign}'s ${missileType.name}",
                 position = position,
                 rotation = rotation,

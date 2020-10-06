@@ -1,7 +1,7 @@
 package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.FighterAIGame
+import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
@@ -11,18 +11,18 @@ import kotlin.math.max
 // Steers a missile at an opponent
 class MissileGuidance(val target: Actor, val missileType: MissileType) : Pilot {
 
-    override fun fly(fighterGame: FighterAIGame, us: Actor): PilotControl {
+    override fun fly(world: World, us: Actor): PilotControl {
         // if we are close enough, detonate
         if (target.position.dst(us.position) < missileType.explosionRadius) {
 
 
             // TODO: move to detonate
-            fighterGame.actors
+            world.actors
                     .filter { it.position.dst(us.position) < missileType.explosionRadius }
-                    .forEach { it.life?.takeDamage(fighterGame, it, missileType.damage) }
+                    .forEach { it.life?.takeDamage(world, it, missileType.damage) }
 
             // destroy ourselves
-            fighterGame.removeActors.add(us)
+            world.removeActors.add(us)
         }
 
 

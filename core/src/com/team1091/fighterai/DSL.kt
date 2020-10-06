@@ -19,8 +19,8 @@ import com.team1091.fighterai.types.*
 
 enum class Place(
         environmentSetup: () -> Environment,
-        val props: (game: FighterAIGame) -> Unit,
-        val ships: (fighterGame: FighterAIGame, controllers: List<Controller>) -> Unit,
+        val props: (world: World) -> Unit,
+        val ships: (world: World, controllers: List<Controller>) -> Unit,
         val environment: Environment = environmentSetup()) {
 
     DESERT(
@@ -75,7 +75,7 @@ enum class Place(
 //                }
 
             },
-            ships = { fighterGame: FighterAIGame, controllers: List<Controller> ->
+            ships = { world: World, controllers: List<Controller> ->
                 // players
 //                controllers.forEachIndexed { i, controller ->
 //                    Gdx.app.log("Controller Found, Assigning ship", controller.name)
@@ -108,7 +108,7 @@ enum class Place(
 
                     val aircraftType = AircraftType.RAPTOR
 
-                    fighterGame.actors.add(
+                    world.actors.add(
                             Actor(
                                     callsign = faction.name + " " + pilot.javaClass.simpleName,
                                     faction = faction,
@@ -138,7 +138,7 @@ enum class Place(
 //                environment
 //            },
 //            {},
-//            { fighterGame: FighterAIGame, controllers: List<Controller> ->
+//            { world: World, controllers: List<Controller> ->
 //
 //            }
 //    )
