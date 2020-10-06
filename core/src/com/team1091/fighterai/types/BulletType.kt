@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 
 enum class BulletType(
-        val launchVelocity: Float = 6f,
+        val launchVelocity: Float = 20f,
         val refireMS: Long = 1000,
         var model: Model,
-        val expiration: Long = 1500,
+        val expiration: Long = 3000,
         val radius: Float = 0.3f,
         val damage: Float = 2f
         // sound?
@@ -22,7 +22,7 @@ enum class BulletType(
                     Material(ColorAttribute.createDiffuse(Color.YELLOW)),
                     attr)),
     M61_VULCAN(
-            launchVelocity = 40f,
+            launchVelocity = 80f,
             refireMS = 150,
             model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
                     Material(ColorAttribute.createDiffuse(Color.YELLOW)),

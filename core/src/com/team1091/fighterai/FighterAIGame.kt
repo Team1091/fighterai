@@ -122,7 +122,6 @@ class FighterAIGame : ApplicationAdapter() {
 
                 cam.up.set(up.cpy().mul(randomActor.rotation))
 
-//                cam.lookAt(actor.position)
             } else {
                 cam.position.set(size / 2f, size / 2f, size / 2f)
                 cam.lookAt(0f, 0f, 0f)
