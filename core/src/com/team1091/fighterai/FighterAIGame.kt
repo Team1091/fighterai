@@ -1,4 +1,4 @@
-package com.team1091.fighterai;
+package com.team1091.fighterai
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
@@ -68,7 +68,7 @@ class FighterAIGame : ApplicationAdapter() {
 
         val controllers = Controllers.getControllers().take(4)
         mission.place.ships(world, controllers)
-        println("Controllers " + controllers)
+        println("Controllers $controllers")
 
         splitScreen = when (controllers.size) {
             0, 1 -> SplitScreen.ONE

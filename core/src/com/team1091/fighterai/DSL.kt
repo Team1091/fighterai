@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Faction
@@ -23,7 +24,6 @@ import com.team1091.fighterai.actor.weapon.MissileRack
 import com.team1091.fighterai.types.AircraftType
 import com.team1091.fighterai.types.BulletType
 import com.team1091.fighterai.types.MissileType
-
 
 enum class Place(
         environmentSetup: () -> Environment,
@@ -47,9 +47,9 @@ enum class Place(
                 imgTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat)
 
                 val imgTextureRegion = com.badlogic.gdx.graphics.g2d.TextureRegion(imgTexture)
-                imgTextureRegion.setRegion(0, 0, imgTexture.getWidth() * 10, imgTexture.getHeight() * 10);
+                imgTextureRegion.setRegion(0, 0, imgTexture.width * 10, imgTexture.height * 10)
 
-                var modelBuilder = com.badlogic.gdx.graphics.g3d.utils.ModelBuilder()
+                val modelBuilder = ModelBuilder()
 
                 val attr = (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
                 modelBuilder.begin()
@@ -58,7 +58,7 @@ enum class Place(
                                 -size, size, 0f,
                                 -size, -size, 0f,
                                 size, -size, 0f,
-                                0f, 0f, 1f);
+                                0f, 0f, 1f)
 
                 val groundModel = modelBuilder.end()
 

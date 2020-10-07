@@ -47,7 +47,7 @@ class AiPilot : Pilot {
                     .filter {
                         us.faction.isEnemy(it.faction)
                     }
-                    .minByOrNull() {
+                    .minByOrNull {
                         it.position.dst(us.position)
                     }
 //            if(target==null){
@@ -121,11 +121,12 @@ class AiPilot : Pilot {
             }
 
         } else {
-            if (mode == AiState.ATTACK) {
-                accelp = 1f
-            } else { // retreat
-                accelp = 1f
-            }
+            accelp = 1f
+//            if (mode == AiState.ATTACK) {
+//                accelp = 1f
+//            } else { // retreat
+//                accelp = 1f
+//            }
         }
 
         return PilotControl(

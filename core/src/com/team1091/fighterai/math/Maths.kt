@@ -86,5 +86,5 @@ fun findInForwardArc(
             }
             .filter {
                 maxAngle == null || us angleTo it < maxAngle
-            }.toList();
+            }.toList()
 }
