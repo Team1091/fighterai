@@ -5,15 +5,16 @@ import com.badlogic.gdx.controllers.mappings.Xbox
 import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
+import com.team1091.fighterai.actor.Telemetry
 import com.team1091.fighterai.math.accel
 import com.team1091.fighterai.math.deaden
 
 // Pilot with an old XBOX controller
 class HumanPilot(val controller: Controller) : Pilot {
-    override fun fly(us: Actor, radar: Radar): PilotControl {
+    override fun fly(us: Telemetry, radar: Radar): PilotControl {
         with(us) {
 
-            if (engine == null) {
+            if (us.aircraftType == null) {
                 return PilotControl()
             }
 

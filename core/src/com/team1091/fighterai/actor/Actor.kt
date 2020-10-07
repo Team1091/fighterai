@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.pilot.Pilot
 import com.team1091.fighterai.actor.weapon.Weapon
 import com.team1091.fighterai.types.AircraftType
+import java.util.*
+import java.util.UUID.randomUUID
 
 open class Actor(
         val callsign: String,
@@ -27,9 +29,25 @@ open class Actor(
         val engine: Engine?
 ) {
     val instance = ModelInstance(model)
+    val worldId = randomUUID()
 
     fun toRadarContact():RadarContact {
         return RadarContact(faction, position.cpy(), rotation.cpy(), velocity)
+    }
+
+    fun toTelemetry():Telemetry {
+        return Telemetry(
+                worldId,
+                callsign,
+                position.cpy(),
+                rotation.cpy(),
+                velocity,
+                life?.cur ?: 0f,
+                aircraftType,
+                primaryWeapon?.getVelocity() ?: 0f,
+                secondaryWeapon?.getVelocity() ?: 0f,
+                faction,
+                radius)
     }
 
     init {

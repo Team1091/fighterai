@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.RadarContact
+import com.team1091.fighterai.actor.Telemetry
 import com.team1091.fighterai.math.FiringSolution
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
@@ -26,7 +27,7 @@ class T1000AiPilot : Pilot {
     var lastTargetTime: Long = 0
     var mode: AiState = AiState.ATTACK
 
-    override fun fly(us: Actor, radar: Radar): PilotControl {
+    override fun fly(us: Telemetry, radar: Radar): PilotControl {
         // Are we diving into the ground?  Lets not.
         if (us.position.z < groundProximityWarning) {
            return pullUp(us);
@@ -52,7 +53,7 @@ class T1000AiPilot : Pilot {
         )
     }
 
-    fun pullUp(us: Actor):PilotControl {
+    fun pullUp(us: Telemetry):PilotControl {
         // figure out how we are rotated, and which way up is.
         val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
         var (pitch, yaw, roll) = turnTowards(localUp)
@@ -68,7 +69,7 @@ class T1000AiPilot : Pilot {
         )
     }
 
-    fun acquireTarget(us: Actor, radar: Radar):RadarContact? {
+    fun acquireTarget(us: Telemetry, radar: Radar):RadarContact? {
         val time = System.currentTimeMillis()
         val target = radar.contacts
                 .filter {
@@ -87,7 +88,7 @@ class T1000AiPilot : Pilot {
         return target
     }
 
-    fun calculateFlightPath(us: Actor, target: RadarContact): Triple<Float, Float, Float> {
+    fun calculateFlightPath(us: Telemetry, target: RadarContact): Triple<Float, Float, Float> {
         val distanceToTarget = us.position.dst(target.position);
 
         // If in attack mode and we are too close, change to retreat mode.
@@ -114,7 +115,7 @@ class T1000AiPilot : Pilot {
         return Triple(pitchp * direction, yawp * direction, rollp * direction)
     }
 
-    fun calculateAcceleration(us: Actor, target: RadarContact):Float {
+    fun calculateAcceleration(us: Telemetry, target: RadarContact):Float {
         val distanceToTarget = us.position.dst(target.position);
         val targetTrajectory = targetTrajectory(us, target)
         val unRotatedTargetOffset = targetTrajectory.path.mul(us.rotation.cpy().conjugate())
@@ -125,7 +126,7 @@ class T1000AiPilot : Pilot {
         return 1f
     }
 
-    fun calculateWeaponAction(us: Actor, target: RadarContact):Pair<Boolean, Boolean> {
+    fun calculateWeaponAction(us: Telemetry, target: RadarContact):Pair<Boolean, Boolean> {
         val distanceToTarget = us.position.dst(target.position);
         val targetTrajectory = targetTrajectory(us, target)
         val unRotatedTargetOffset = targetTrajectory.path.mul(us.rotation.cpy().conjugate())
@@ -137,12 +138,12 @@ class T1000AiPilot : Pilot {
         return Pair(false, false)
     }
 
-    fun targetTrajectory(us: Actor, target: RadarContact): FiringSolution {
+    fun targetTrajectory(us: Telemetry, target: RadarContact): FiringSolution {
         return leadTarget(
                 us.position,
                 target.position,
                 Vector3(0f, target.velocity, 0f).mul(target.rotation),
-                max(us.velocity, us.primaryWeapon?.getVelocity() ?: 3f)
+                max(us.velocity, us.primaryWeaponVelocity)
         )
     }
 }
