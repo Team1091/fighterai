@@ -2,11 +2,9 @@ package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.RadarContact
-import com.team1091.fighterai.math.findInForwardArc
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
 import com.team1091.fighterai.types.up
@@ -31,10 +29,10 @@ class AiPilot : Pilot {
 
             Gdx.app.log(us.callsign, "Emergency pull up")
             return PilotControl(
-                    pitch = pitch,
-                    yaw = yaw,
-                    roll = roll,
-                    accel = 1f,
+                    pitch,
+                    yaw,
+                    roll,
+                    1f,
                     primaryWeapon = false,
                     secondaryWeapon = false
             )
@@ -64,7 +62,7 @@ class AiPilot : Pilot {
 
         if (target == null) {
             // if we dont have a target, get in formation?
-            return PilotControl(accel = 1f)
+            return PilotControl(accelp = 1f)
         }
 
         val dist = us.position.dst(target.position)
@@ -131,10 +129,10 @@ class AiPilot : Pilot {
         }
 
         return PilotControl(
-                pitch = pitchp * towards,
-                yaw = yawp * towards,
-                roll = rollp * towards,
-                accel = accelp,
+                pitchp * towards,
+                yawp * towards,
+                rollp * towards,
+                accelp,
                 primaryWeapon = primary,
                 secondaryWeapon = secondary
         )

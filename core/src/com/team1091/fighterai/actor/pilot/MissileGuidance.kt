@@ -37,9 +37,9 @@ class MissileGuidance(val target: Actor, val missileType: MissileType, val world
         var (pitch, yaw, roll) = turnTowards(unRotatedTargetOffset)
 
         return PilotControl(
-                pitch = pitch,
-                yaw = yaw,
-                accel = if (unRotatedTargetOffset.y > 0) 1f else 0.25f
+                pitch,
+                yaw,
+                if (unRotatedTargetOffset.y > 0) 1f else 0.25f
         )
     }
 }

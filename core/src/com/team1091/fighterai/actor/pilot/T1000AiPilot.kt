@@ -35,7 +35,7 @@ class T1000AiPilot : Pilot {
         val target = acquireTarget(us, radar)
         if (target == null) {
             // if we dont have a target, get in formation?
-            return PilotControl(accel = 1f)
+            return PilotControl(accelp = 1f)
         }
 
         val acceleration = calculateAcceleration(us, target)
@@ -43,10 +43,10 @@ class T1000AiPilot : Pilot {
         val (firePrimaryWeapon, fireSecondaryWeapon) = calculateWeaponAction(us, target)
 
         return PilotControl(
-                pitch = pitch,
-                yaw = yaw,
-                roll = roll,
-                accel = acceleration,
+                pitch,
+                yaw,
+                roll,
+                acceleration,
                 primaryWeapon = firePrimaryWeapon,
                 secondaryWeapon = fireSecondaryWeapon
         )
@@ -59,10 +59,10 @@ class T1000AiPilot : Pilot {
 
         Gdx.app.log(us.callsign, "Emergency pull up")
         return PilotControl(
-                pitch = pitch,
-                yaw = yaw,
-                roll = roll,
-                accel = 1f,
+                pitch,
+                yaw,
+                roll,
+                1f,
                 primaryWeapon = false,
                 secondaryWeapon = false
         )
