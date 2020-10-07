@@ -1,7 +1,7 @@
 package com.team1091.fighterai.math
 
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.FighterAIGame
+import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.pilot.angleTo
 import kotlin.math.abs
@@ -57,21 +57,29 @@ fun deaden(value: Float): Float {
 }
 
 
-fun turnTowards(unRotatedTargetOffset: Vector3): Triple<Float, Float, Float> {
-    var pitchp = if (unRotatedTargetOffset.z > 0f) 1f else -1f
-    var yawp = if (unRotatedTargetOffset.x > 0f) 1f else -1f
-    var rollp = yawp
-    return Triple(pitchp, yawp, rollp)
-}
+fun turnTowards(unRotatedTargetOffset: Vector3): StickPosition =
+        StickPosition(
+                pitch = if (unRotatedTargetOffset.z > 0f) 1f else -1f,
+                yaw = if (unRotatedTargetOffset.x > 0f) 1f else -1f,
+                roll = if (unRotatedTargetOffset.x > 0f) 1f else -1f
+        )
+
+
+data class StickPosition(
+        var pitch: Float,
+        var yaw: Float,
+        var roll: Float
+)
+
 
 // Used to find a target in the forward arc, closest first.
 fun findInForwardArc(
-        fighterGame: FighterAIGame,
+        world: World,
         us: Actor,
         maxDist: Float? = null,
         maxAngle: Float? = null
 ): List<Actor> {
-    return fighterGame.actors.asSequence()
+    return world.actors.asSequence()
             .filter { it != us && it.engine != null }
             .filter {
                 maxDist == null || it.position.dst(us.position) < maxDist

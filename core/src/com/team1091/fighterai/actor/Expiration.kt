@@ -1,6 +1,6 @@
 package com.team1091.fighterai.actor
 
-import com.team1091.fighterai.FighterAIGame
+import com.team1091.fighterai.World
 
 /*
  This component removes an actor after a period of time.
@@ -10,9 +10,9 @@ class Expiration(ttlMS: Long) {
 
     val timeOfDeath: Long = System.currentTimeMillis() + ttlMS
 
-    fun check(fighterGame: FighterAIGame, actor: Actor) {
+    fun check(world: World, actor: Actor) {
         if (System.currentTimeMillis() > timeOfDeath) {
-            fighterGame.removeActors.add(actor)
+            world.removeActors.add(actor)
         }
     }
 

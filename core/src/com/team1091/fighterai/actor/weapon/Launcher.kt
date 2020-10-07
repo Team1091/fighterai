@@ -2,9 +2,11 @@ package com.team1091.fighterai.actor.weapon
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.FighterAIGame
+import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
-import com.team1091.fighterai.types.*
+import com.team1091.fighterai.types.forward
+import com.team1091.fighterai.types.left
+import com.team1091.fighterai.types.right
 
 abstract class Launcher(
         val refireMS: Long,
@@ -20,7 +22,7 @@ abstract class Launcher(
     var lastFired: Long = 0
     var nextTube = 0
 
-    override fun fire(fighterGame: FighterAIGame, shooter: Actor) {
+    override fun fire(world: World, shooter: Actor) {
         val millis = System.currentTimeMillis()
         if (lastFired + refireMS < millis) {
 
@@ -30,7 +32,7 @@ abstract class Launcher(
                 nextTube = 0
 
             project(
-                    fighterGame,
+                    world,
                     shooter,
                     shooter.position.cpy().add(offset.cpy().mul(shooter.rotation)),
                     shooter.rotation.cpy(),

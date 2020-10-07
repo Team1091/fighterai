@@ -28,6 +28,10 @@ open class Actor(
 ) {
     val instance = ModelInstance(model)
 
+    fun toRadarContact():RadarContact {
+        return RadarContact(faction, position.cpy(), rotation.cpy(), velocity)
+    }
+
     init {
         instance.transform.setToTranslation(position).rotate(rotation)
     }

@@ -1,26 +1,34 @@
 package com.team1091.fighterai
 
 // This is a prototype for generating scripted missions
+
 import com.badlogic.gdx.controllers.Controller
-import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Faction
 import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.pilot.AiPilot
+import com.team1091.fighterai.actor.pilot.T1000AiPilot
 import com.team1091.fighterai.actor.weapon.Cannon
 import com.team1091.fighterai.actor.weapon.MissileRack
-import com.team1091.fighterai.types.*
+import com.team1091.fighterai.types.AircraftType
+import com.team1091.fighterai.types.BulletType
+import com.team1091.fighterai.types.MissileType
+
 
 enum class Place(
         environmentSetup: () -> Environment,
-        val props: (game: FighterAIGame) -> Unit,
-        val ships: (fighterGame: FighterAIGame, controllers: List<Controller>) -> Unit,
+        val props: (world: World) -> Unit,
+        val ships: (world: World, controllers: List<Controller>) -> Unit,
         val environment: Environment = environmentSetup()) {
 
     DESERT(
@@ -34,15 +42,25 @@ enum class Place(
 
                 val size = 10000f
 
-                val groundModel = modelBuilder.createRect(
-                        size, size, 0f,
-                        -size, size, 0f,
-                        -size, -size, 0f,
-                        size, -size, 0f,
-                        0f, 0f, 1f,
-                        Material(ColorAttribute.createDiffuse(Color.GOLD)),
-                        attr
-                )
+
+                val imgTexture = Texture(com.badlogic.gdx.Gdx.files.internal("Tirari_Desert_-_NASA_-_satellite_2006_square.jpg"))
+                imgTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat)
+
+                val imgTextureRegion = com.badlogic.gdx.graphics.g2d.TextureRegion(imgTexture)
+                imgTextureRegion.setRegion(0, 0, imgTexture.getWidth() * 10, imgTexture.getHeight() * 10);
+
+                var modelBuilder = com.badlogic.gdx.graphics.g3d.utils.ModelBuilder()
+
+                val attr = (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
+                modelBuilder.begin()
+                modelBuilder.part("front", GL20.GL_TRIANGLES, attr, Material(TextureAttribute.createDiffuse(imgTextureRegion)))
+                        .rect(size, size, 0f,
+                                -size, size, 0f,
+                                -size, -size, 0f,
+                                size, -size, 0f,
+                                0f, 0f, 1f);
+
+                val groundModel = modelBuilder.end()
 
                 val ground = ModelInstance(groundModel)
                 it.otherGeometry.add(ground)
@@ -75,7 +93,7 @@ enum class Place(
 //                }
 
             },
-            ships = { fighterGame: FighterAIGame, controllers: List<Controller> ->
+            ships = { world: World, controllers: List<Controller> ->
                 // players
 //                controllers.forEachIndexed { i, controller ->
 //                    Gdx.app.log("Controller Found, Assigning ship", controller.name)
@@ -100,7 +118,7 @@ enum class Place(
 //                }
 
                 listOf(
-                        Triple(AiPilot(), PlayerStart.LEFT, Faction.BLUE),
+                        Triple(T1000AiPilot(), PlayerStart.LEFT, Faction.BLUE),
                         Triple(AiPilot(), PlayerStart.RIGHT, Faction.RED)
                 ).forEach {
 
@@ -108,7 +126,7 @@ enum class Place(
 
                     val aircraftType = AircraftType.RAPTOR
 
-                    fighterGame.actors.add(
+                    world.actors.add(
                             Actor(
                                     callsign = faction.name + " " + pilot.javaClass.simpleName,
                                     faction = faction,
@@ -138,7 +156,7 @@ enum class Place(
 //                environment
 //            },
 //            {},
-//            { fighterGame: FighterAIGame, controllers: List<Controller> ->
+//            { world: World, controllers: List<Controller> ->
 //
 //            }
 //    )

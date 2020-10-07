@@ -27,8 +27,8 @@ enum class MissileType(
                     Material(ColorAttribute.createDiffuse(Color.BLACK)),
                     attr
             ),
-            engine =  Engine(
-                    maxAccel =70f,
+            engine = Engine(
+                    maxAccel = 70f,
                     maxYaw = 65f,
                     maxRoll = 65f,
                     maxPitch = 65f
@@ -44,7 +44,7 @@ enum class MissileType(
                     Material(ColorAttribute.createDiffuse(Color.CYAN)),
                     attr
             ),
-            engine =  Engine(
+            engine = Engine(
                     maxAccel = 80f,
                     maxYaw = 0f,
                     maxRoll = 0f,
