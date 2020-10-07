@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
+import com.team1091.fighterai.actor.Radar
+import com.team1091.fighterai.actor.RadarContact
 import com.team1091.fighterai.math.findInForwardArc
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
@@ -15,11 +17,11 @@ import kotlin.math.max
  */
 class AiPilot : Pilot {
 
-    var lastTarget: Actor? = null
+    var lastTarget: RadarContact? = null
     var lastTargetTime: Long = 0
     var mode: AiState = AiState.ATTACK
 
-    override fun fly(world: World, us: Actor): PilotControl {
+    override fun fly(us: Actor, radar: Radar): PilotControl {
 
         // Are we diving into the ground?  Lets not.
         if (us.position.z < 30) {
@@ -39,11 +41,17 @@ class AiPilot : Pilot {
         }
 
         val time = System.currentTimeMillis()
-        val target: Actor?
+        val target: RadarContact?
 
         // find a target, close and in front of us are good ideas
         if (lastTargetTime + 1000 < time) {
-            target = findInForwardArc(world, us = us, enemyOnly = true)
+            target = radar.contacts
+                    .filter {
+                        us.faction.isEnemy(it.faction)
+                    }
+                    .minByOrNull() {
+                        it.position.dst(us.position)
+                    }
 //            if(target==null){
 //                Gdx.app.log(us.callsign, "Could not find Enemy")
 //            }
@@ -120,7 +128,6 @@ class AiPilot : Pilot {
             } else { // retreat
                 accelp = 1f
             }
-
         }
 
         return PilotControl(
@@ -135,7 +142,6 @@ class AiPilot : Pilot {
     }
 
 }
-
 
 enum class AiState {
     ATTACK,

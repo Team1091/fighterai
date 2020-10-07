@@ -17,6 +17,7 @@ import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Faction
 import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.pilot.AiPilot
+import com.team1091.fighterai.actor.pilot.T1000AiPilot
 import com.team1091.fighterai.actor.weapon.Cannon
 import com.team1091.fighterai.actor.weapon.MissileRack
 import com.team1091.fighterai.types.AircraftType
@@ -117,7 +118,7 @@ enum class Place(
 //                }
 
                 listOf(
-                        Triple(AiPilot(), PlayerStart.LEFT, Faction.BLUE),
+                        Triple(T1000AiPilot(), PlayerStart.LEFT, Faction.BLUE),
                         Triple(AiPilot(), PlayerStart.RIGHT, Faction.RED)
                 ).forEach {
 

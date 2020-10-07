@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Actor
+import com.team1091.fighterai.actor.Radar
+import com.team1091.fighterai.math.findInForwardArc
 import com.team1091.fighterai.types.forward
 import com.team1091.fighterai.types.right
 import com.team1091.fighterai.types.up
@@ -26,7 +28,9 @@ class World {
         for (craft in actors) {
 
             if (craft.pilot != null) {
-                val pilotControl = craft.pilot.fly(this, craft)
+
+                val visibleActors = findInForwardArc(this, craft);
+                val pilotControl = craft.pilot.fly(craft, Radar(visibleActors.map { it.toRadarContact() }))
 
                 // If we have an engine, control us
                 craft.engine?.also { engine ->

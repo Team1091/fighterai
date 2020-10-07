@@ -39,7 +39,7 @@ class MissileRack(val missileType: MissileType) : Launcher(
                 rotation = rotation,
                 velocity = velocity,
                 model = missileType.model,
-                pilot = MissileGuidance(target, missileType),
+                pilot = MissileGuidance(target, missileType, world),
                 life = Life(1f),
                 expiration = Expiration(missileType.expiration),
                 radius = missileType.radius,
