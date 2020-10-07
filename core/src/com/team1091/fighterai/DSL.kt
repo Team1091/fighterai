@@ -129,16 +129,15 @@ enum class Place(
                     world.actors.add(
                             Actor(
                                     callsign = faction.name + " " + pilot.javaClass.simpleName,
-                                    faction = faction,
                                     position = playerStart.pos.cpy(),
                                     rotation = playerStart.rotation.cpy(),
                                     velocity = 300f,
                                     model = aircraftType.model,
                                     pilot = pilot,
                                     life = Life(aircraftType.life),
-                                    aircraftType = aircraftType,
                                     primaryWeapon = Cannon(BulletType.M61_VULCAN),
                                     secondaryWeapon = MissileRack(MissileType.AMRAAM),
+                                    faction = faction,
                                     collider = DamageCollider(4f),
                                     respawnable = true,
                                     engine = aircraftType.engine

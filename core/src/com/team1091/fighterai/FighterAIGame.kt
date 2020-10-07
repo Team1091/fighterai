@@ -17,9 +17,6 @@ import com.team1091.fighterai.types.AircraftType
 import com.team1091.fighterai.types.BulletType
 import com.team1091.fighterai.types.MissileType
 import com.team1091.fighterai.types.up
-import com.team1091.fighterai.actor.Radar
-import com.team1091.fighterai.math.findInForwardArc
-import com.team1091.fighterai.types.*
 import java.lang.Integer.max
 
 class FighterAIGame : ApplicationAdapter() {

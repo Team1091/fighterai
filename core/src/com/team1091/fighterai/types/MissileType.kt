@@ -12,7 +12,7 @@ enum class MissileType(
         val explosionRadius: Float,
         val radius: Float = 0.3f,
         var model: Model,
-        val launchVelocity: Float = 5f,
+        val launchVelocity: Float = 40f,
         val expiration: Long,
         val engine: Engine
 ) {

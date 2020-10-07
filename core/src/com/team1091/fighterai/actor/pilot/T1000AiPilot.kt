@@ -29,7 +29,7 @@ class T1000AiPilot : Pilot {
     override fun fly(us: Actor, radar: Radar): PilotControl {
         // Are we diving into the ground?  Lets not.
         if (us.position.z < groundProximityWarning) {
-           return pullUp(us);
+            return pullUp(us);
         }
 
         val target = acquireTarget(us, radar)
@@ -52,7 +52,7 @@ class T1000AiPilot : Pilot {
         )
     }
 
-    fun pullUp(us: Actor):PilotControl {
+    fun pullUp(us: Actor): PilotControl {
         // figure out how we are rotated, and which way up is.
         val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
         var (pitch, yaw, roll) = turnTowards(localUp)
@@ -68,7 +68,7 @@ class T1000AiPilot : Pilot {
         )
     }
 
-    fun acquireTarget(us: Actor, radar: Radar):RadarContact? {
+    fun acquireTarget(us: Actor, radar: Radar): RadarContact? {
         val time = System.currentTimeMillis()
         val target = radar.contacts
                 .filter {
@@ -114,7 +114,7 @@ class T1000AiPilot : Pilot {
         return Triple(pitchp * direction, yawp * direction, rollp * direction)
     }
 
-    fun calculateAcceleration(us: Actor, target: RadarContact):Float {
+    fun calculateAcceleration(us: Actor, target: RadarContact): Float {
         val distanceToTarget = us.position.dst(target.position);
         val targetTrajectory = targetTrajectory(us, target)
         val unRotatedTargetOffset = targetTrajectory.path.mul(us.rotation.cpy().conjugate())
@@ -125,7 +125,7 @@ class T1000AiPilot : Pilot {
         return 1f
     }
 
-    fun calculateWeaponAction(us: Actor, target: RadarContact):Pair<Boolean, Boolean> {
+    fun calculateWeaponAction(us: Actor, target: RadarContact): Pair<Boolean, Boolean> {
         val distanceToTarget = us.position.dst(target.position);
         val targetTrajectory = targetTrajectory(us, target)
         val unRotatedTargetOffset = targetTrajectory.path.mul(us.rotation.cpy().conjugate())

@@ -50,6 +50,7 @@ class World {
                     craft.secondaryWeapon?.fire(this, craft)
                 }
             }
+            craft.explosive?.act(craft, this)
 
             with(craft) {
                 velocity *= 1f - (0.8f * dt) // Slow down, air resistance?

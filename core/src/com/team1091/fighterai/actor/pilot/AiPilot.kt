@@ -2,11 +2,9 @@ package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.RadarContact
-import com.team1091.fighterai.math.findInForwardArc
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
 import com.team1091.fighterai.types.up
