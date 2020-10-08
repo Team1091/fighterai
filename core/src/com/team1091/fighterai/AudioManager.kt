@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import java.util.*
 
-class AudioManager {
+class AudioManager : IAudioManager {
 
     val random = Random()
 
@@ -28,19 +28,19 @@ class AudioManager {
 
     }
 
-    fun explode() {
+    override fun explode() {
         explosion.play(volume(), pitch(), pan())
     }
 
-    fun laser() {
+    override fun laser() {
         laser.play(volume(), pitch(), pan())
     }
 
-    fun launch() {
+    override fun launch() {
         launch.play(volume(), pitch(), pan())
     }
 
-    fun beepFail() {
+    override fun beepFail() {
         beep.play(volume(), pitch(), pan())
     }
 
@@ -50,5 +50,4 @@ class AudioManager {
         launch.dispose()
         beep.dispose()
     }
-
 }

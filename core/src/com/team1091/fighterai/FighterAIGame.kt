@@ -28,11 +28,10 @@ class FighterAIGame : ApplicationAdapter() {
     internal lateinit var shapeRenderer: ShapeRenderer
 //    internal lateinit var envCubemap: EnvironmentCubemap
 
-    val world = World()
-
+    val audio: AudioManager = AudioManager()
+    val world = World(audio)
     var splitScreen: SplitScreen = SplitScreen.ONE
     var players = mutableListOf<Actor>()
-    val audio: AudioManager = AudioManager()
 
     override fun create() {
         audio.init()

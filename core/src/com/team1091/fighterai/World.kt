@@ -13,15 +13,12 @@ import com.team1091.fighterai.types.up
 import java.util.*
 import kotlin.math.pow
 
-class World {
-
+class World(val audio: IAudioManager) {
     val actors = mutableListOf<Actor>()
     val newActors = mutableListOf<Actor>()
     val removeActors = mutableListOf<Actor>()
     var respawnActors = mutableListOf<Actor>()
-
     var otherGeometry = mutableListOf<ModelInstance>()
-
 
     fun simulate(dt: Float) {
         // Simulate

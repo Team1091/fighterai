@@ -27,11 +27,11 @@ class MissileRack(val missileType: MissileType) : Launcher(
 
         if (target == null) {
             // fail to fire - should only do this sound to players
-//            fighterGame.audio.beepFail()
+            world.audio.beepFail()
             return
         }
-        // TODO: audio
-        //fighterGame.audio.launch()
+
+        world.audio.launch()
 
         world.newActors.add(Actor(
                 callsign = "${shooter.callsign}'s ${missileType.name}",
@@ -48,10 +48,8 @@ class MissileRack(val missileType: MissileType) : Launcher(
                 engine = missileType.engine,
                 secondaryWeapon = Explosive(missileType.damage, missileType.explosionRadius)
         ))
-
     }
 
     override fun getVelocity(): Float = launchVelocity
     override fun getDuration(): Float = missileType.expiration / 1000f
-
 }
