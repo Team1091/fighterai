@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.pilot.Pilot
 import com.team1091.fighterai.actor.weapon.Weapon
-import com.team1091.fighterai.types.AircraftType
 
 open class Actor(
         val callsign: String,
@@ -16,7 +15,6 @@ open class Actor(
         model: Model,
         val pilot: Pilot? = null,
         val life: Life? = null,
-        val aircraftType: AircraftType? = null,
         val primaryWeapon: Weapon? = null,
         val secondaryWeapon: Weapon? = null,
         val faction: Faction = Faction.UNALIGNED,
@@ -24,11 +22,12 @@ open class Actor(
         val radius: Float = 1f,
         val collider: Collider?,
         val respawnable: Boolean = false,
-        val engine: Engine?
+        val engine: Engine?,
+        val explosive: Explosive? = null
 ) {
     val instance = ModelInstance(model)
 
-    fun toRadarContact():RadarContact {
+    fun toRadarContact(): RadarContact {
         return RadarContact(faction, position.cpy(), rotation.cpy(), velocity)
     }
 

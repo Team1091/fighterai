@@ -1,6 +1,5 @@
 package com.team1091.fighterai.actor.pilot
 
-import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.math.angleBetween

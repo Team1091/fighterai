@@ -8,5 +8,4 @@ class RadarContact(
         val position: Vector3,
         val rotation: Quaternion,
         var velocity: Float = 0f,
-) {
-}
+)
