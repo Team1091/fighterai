@@ -12,10 +12,8 @@ import com.team1091.fighterai.types.BulletType
 class Cannon(val bulletType: BulletType) : Launcher(bulletType.refireMS, bulletType.launchVelocity) {
 
     override fun project(world: World, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float) {
-
         // I think we will need a sound player class, that detects the distance to each and scales the audio
-        //TODO: sound player
-//        world.audio.laser()
+        world.audio.laser()
         world.newActors.add(Actor(
                 "${shooter.callsign}'s bullet",
                 position,
@@ -31,5 +29,4 @@ class Cannon(val bulletType: BulletType) : Launcher(bulletType.refireMS, bulletT
 
     override fun getVelocity(): Float = launchVelocity
     override fun getDuration(): Float = bulletType.expiration / 1000f
-
 }
