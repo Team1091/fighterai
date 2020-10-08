@@ -6,8 +6,6 @@ import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.pilot.Pilot
 import com.team1091.fighterai.actor.weapon.Weapon
-import com.team1091.fighterai.types.AircraftType
-import java.util.*
 import java.util.UUID.randomUUID
 
 open class Actor(
@@ -25,8 +23,9 @@ open class Actor(
         val radius: Float = 1f,
         val collider: Collider?,
         val respawnable: Boolean = false,
-        val engine: Engine?,
-        val explosive: Explosive? = null
+        val engine: Engine?
+//        ,
+//        val explosive: Explosive? = null
 ) {
     val instance = ModelInstance(model)
     val worldId = randomUUID()
@@ -35,19 +34,21 @@ open class Actor(
         return RadarContact(faction, position.cpy(), rotation.cpy(), velocity)
     }
 
-    fun toTelemetry():Telemetry {
+    fun toTelemetry(): Telemetry {
         return Telemetry(
-                worldId,
-                callsign,
-                position.cpy(),
-                rotation.cpy(),
-                velocity,
-                life?.cur ?: 0f,
-                aircraftType,
-                primaryWeapon?.getVelocity() ?: 0f,
-                secondaryWeapon?.getVelocity() ?: 0f,
-                faction,
-                radius)
+                worldId = worldId,
+                callsign = callsign,
+                position = position.cpy(),
+                rotation = rotation.cpy(),
+                velocity = velocity,
+                life = life?.cur ?: 0f,
+                primaryWeaponVelocity = primaryWeapon?.getVelocity() ?: 0f,
+                primaryWeaponDuration = primaryWeapon?.getDuration() ?: 0f,
+                secondaryWeaponVelocity = secondaryWeapon?.getVelocity() ?: 0f,
+                secondaryWeaponDuration = secondaryWeapon?.getDuration() ?: 0f,
+                faction = faction,
+                radius = radius
+        )
     }
 
     init {

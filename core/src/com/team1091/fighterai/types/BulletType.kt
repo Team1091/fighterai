@@ -9,7 +9,7 @@ enum class BulletType(
         val launchVelocity: Float = 20f,
         val refireMS: Long = 1000,
         var model: Model,
-        val expiration: Long = 3000,
+        val expiration: Long = 3000,//ms
         val radius: Float = 0.3f,
         val damage: Float = 2f
         // sound?

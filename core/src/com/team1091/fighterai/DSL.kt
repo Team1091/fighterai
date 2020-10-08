@@ -185,7 +185,7 @@ val campaign = Campaign(
                                         placement = Placement.X_NEG
                                 ),
                                 FlightGroup(
-                                       faction =  Faction.BLUE,
+                                        faction = Faction.BLUE,
                                         aircraftType = AircraftType.STORAGE,
                                         qty = 1,
                                         placement = Placement.X_POS

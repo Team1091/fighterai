@@ -2,7 +2,6 @@ package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.RadarContact
 import com.team1091.fighterai.actor.Telemetry
