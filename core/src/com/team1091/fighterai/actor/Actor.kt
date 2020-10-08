@@ -24,8 +24,6 @@ open class Actor(
         val collider: Collider?,
         val respawnable: Boolean = false,
         val engine: Engine?
-//        ,
-//        val explosive: Explosive? = null
 ) {
     val instance = ModelInstance(model)
     val worldId = randomUUID()
