@@ -41,7 +41,7 @@ enum class MissileType(
             explosionRadius = 5f,
             expiration = 8000,
             model = modelBuilder.createCone(0.5f, 1f, 0.5f, 3,
-                    Material(ColorAttribute.createDiffuse(Color.CYAN)),
+                    Material(ColorAttribute.createDiffuse(Color.FIREBRICK)),
                     attr
             ),
             engine = Engine(

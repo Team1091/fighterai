@@ -19,12 +19,12 @@ enum class BulletType(
             launchVelocity = 200f,
             refireMS = 2000,
             model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
-                    Material(ColorAttribute.createDiffuse(Color.YELLOW)),
+                    Material(ColorAttribute.createDiffuse(Color.ORANGE)),
                     attr)),
     M61_VULCAN(
             launchVelocity = 80f,
             refireMS = 150,
             model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
-                    Material(ColorAttribute.createDiffuse(Color.YELLOW)),
+                    Material(ColorAttribute.createDiffuse(Color.ORANGE)),
                     attr)) // bot weapon, objectively worse
 }

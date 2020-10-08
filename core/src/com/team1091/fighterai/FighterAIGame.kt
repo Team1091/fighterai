@@ -3,16 +3,21 @@ package com.team1091.fighterai
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.controllers.Controllers
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.PerspectiveCamera
+import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g3d.Environment
+import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelBatch
+import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Actor
+import com.team1091.fighterai.actor.DamageCollider
+import com.team1091.fighterai.actor.Life
+import com.team1091.fighterai.actor.weapon.Cannon
+import com.team1091.fighterai.actor.weapon.MissileRack
 import com.team1091.fighterai.types.AircraftType
 import com.team1091.fighterai.types.BulletType
 import com.team1091.fighterai.types.MissileType
@@ -42,38 +47,77 @@ class FighterAIGame : ApplicationAdapter() {
 
         val mission = campaign.missions.first()
 
-//        Cubemap(
-//                Gdx.files.internal("cubemap/front.png"),//pos-x
-//                Gdx.files.internal("cubemap/back.png"), //neg-x
-//                Gdx.files.internal("cubemap/left.png"), //pos-y
-//                Gdx.files.internal("cubemap/right.png"), //neg-y
-//                Gdx.files.internal("cubemap/top.png"), //pos-z
-//                Gdx.files.internal("cubemap/bottom.png") //neg-z
-//        )
-//		envCubemap = EnvironmentCubemap(
-//				Gdx.files.internal("cubemap/front.png"),//pos-x
-//				Gdx.files.internal("cubemap/back.png"), //neg-x
-//				Gdx.files.internal("cubemap/left.png"), //pos-y
-//				Gdx.files.internal("cubemap/right.png"), //neg-y
-//				Gdx.files.internal("cubemap/top.png"), //pos-z
-//				Gdx.files.internal("cubemap/bottom.png") //neg-z
-//		)
 
 
         // Setup of scenario
         environment = mission.place.environment
         mission.place.props(world)
 
+        // setup ground
+        val size = 10000f
 
-        val controllers = Controllers.getControllers().take(4)
-        mission.place.ships(world, controllers)
-        println("Controllers $controllers")
+        val imgTexture = Texture(Gdx.files.internal(mission.place.groundTexture))
+        imgTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat)
 
-        splitScreen = when (controllers.size) {
-            0, 1 -> SplitScreen.ONE
-            2 -> SplitScreen.TWO
-            else -> SplitScreen.FOUR
+        val imgTextureRegion = com.badlogic.gdx.graphics.g2d.TextureRegion(imgTexture)
+        imgTextureRegion.setRegion(0, 0, imgTexture.width * 10, imgTexture.height * 10)
+
+        val modelBuilder = ModelBuilder()
+
+        val attr = (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
+        modelBuilder.begin()
+        modelBuilder.part("front", GL20.GL_TRIANGLES, attr, Material(TextureAttribute.createDiffuse(imgTextureRegion)))
+                .rect(size, size, 0f,
+                        -size, size, 0f,
+                        -size, -size, 0f,
+                        size, -size, 0f,
+                        0f, 0f, 1f)
+
+        val groundModel = modelBuilder.end()
+
+        val ground = ModelInstance(groundModel)
+        world.otherGeometry.add(ground)
+
+
+        // Set up the mission units
+        mission.flightGroups.forEach { flightGroup ->
+
+            val aircraftType = flightGroup.aircraftType
+
+            repeat(flightGroup.qty) {offset->
+                world.actors.add(
+                        Actor(
+                                callsign = flightGroup.faction.name + " " + flightGroup.pilot.javaClass.simpleName,
+                                position = flightGroup.placement.pos.cpy().add( up.cpy().scl(offset.toFloat() * 10)),
+                                rotation = flightGroup.placement.rotation.cpy(),
+                                velocity = 300f,
+                                model = aircraftType.model,
+                                pilot = flightGroup.pilot(),
+                                life = Life(aircraftType.life),
+                                primaryWeapon = Cannon(BulletType.M61_VULCAN),
+                                secondaryWeapon = MissileRack(MissileType.HYDRA),
+                                faction = flightGroup.faction,
+                                collider = DamageCollider(4f),
+                                respawnable = true,
+                                engine = aircraftType.engine
+                        )
+                )
+            }
+
         }
+
+// No humans
+//        val controllers = Controllers.getControllers().take(4)
+//        mission.place.ships(world, controllers)
+//        println("Controllers $controllers")
+
+//        splitScreen = when (controllers.size) {
+//            0, 1 -> SplitScreen.ONE
+//            2 -> SplitScreen.TWO
+//            else -> SplitScreen.FOUR
+//        }
+
+        splitScreen = SplitScreen.ONE
 
         cam = when (splitScreen) {
             SplitScreen.ONE -> PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())

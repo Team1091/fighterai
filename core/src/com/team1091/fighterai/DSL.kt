@@ -2,33 +2,19 @@ package com.team1091.fighterai
 
 // This is a prototype for generating scripted missions
 
-import com.badlogic.gdx.controllers.Controller
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Environment
-import com.badlogic.gdx.graphics.g3d.Material
-import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
-import com.team1091.fighterai.actor.Actor
-import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Faction
-import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.pilot.AiPilot
+import com.team1091.fighterai.actor.pilot.Pilot
 import com.team1091.fighterai.actor.pilot.T1000AiPilot
-import com.team1091.fighterai.actor.weapon.Cannon
-import com.team1091.fighterai.actor.weapon.MissileRack
 import com.team1091.fighterai.types.AircraftType
-import com.team1091.fighterai.types.BulletType
-import com.team1091.fighterai.types.MissileType
 
 enum class Place(
         environmentSetup: () -> Environment,
+        val groundTexture: String?,
         val props: (world: World) -> Unit,
-        val ships: (world: World, controllers: List<Controller>) -> Unit,
         val environment: Environment = environmentSetup()
 ) {
 
@@ -39,32 +25,10 @@ enum class Place(
                 environment.add(DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f))
                 environment
             },
+            groundTexture = "Tirari_Desert_-_NASA_-_satellite_2006_square.jpg",
             props = {
 
-                val size = 10000f
-
-
-                val imgTexture = Texture(com.badlogic.gdx.Gdx.files.internal("Tirari_Desert_-_NASA_-_satellite_2006_square.jpg"))
-                imgTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat)
-
-                val imgTextureRegion = com.badlogic.gdx.graphics.g2d.TextureRegion(imgTexture)
-                imgTextureRegion.setRegion(0, 0, imgTexture.width * 10, imgTexture.height * 10)
-
-                val modelBuilder = ModelBuilder()
-
-                val attr = (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
-                modelBuilder.begin()
-                modelBuilder.part("front", GL20.GL_TRIANGLES, attr, Material(TextureAttribute.createDiffuse(imgTextureRegion)))
-                        .rect(size, size, 0f,
-                                -size, size, 0f,
-                                -size, -size, 0f,
-                                size, -size, 0f,
-                                0f, 0f, 1f)
-
-                val groundModel = modelBuilder.end()
-
-                val ground = ModelInstance(groundModel)
-                it.otherGeometry.add(ground)
+                // This is for additional things, like buildings
 
 
 //                val containerModel = modelBuilder.createBox(size, size, size,
@@ -93,52 +57,19 @@ enum class Place(
 //                    }
 //                }
 
-            },
-            ships = { world: World, controllers: List<Controller> ->
-
-
-                listOf(
-                        Triple(T1000AiPilot(), PlayerStart.WEST, Faction.BLUE),
-                        Triple(AiPilot(), PlayerStart.EAST, Faction.RED)
-                ).forEach {
-
-                    val (pilot, playerStart, faction) = it
-
-                    val aircraftType = AircraftType.RAPTOR
-
-                    world.actors.add(
-                            Actor(
-                                    callsign = faction.name + " " + pilot.javaClass.simpleName,
-                                    position = playerStart.pos.cpy(),
-                                    rotation = playerStart.rotation.cpy(),
-                                    velocity = 300f,
-                                    model = aircraftType.model,
-                                    pilot = pilot,
-                                    life = Life(aircraftType.life),
-                                    primaryWeapon = Cannon(BulletType.M61_VULCAN),
-                                    secondaryWeapon = MissileRack(MissileType.AMRAAM),
-                                    faction = faction,
-                                    collider = DamageCollider(4f),
-                                    respawnable = true,
-                                    engine = aircraftType.engine
-                            )
-                    )
-                }
             }
-    )
+    ),
+    OCEAN(
+            {
+                val environment = Environment()
+                environment.set(ColorAttribute(ColorAttribute.AmbientLight, 0.6f, 0.6f, 0.6f, 1f))
+                environment.add(DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f))
+                environment
+            },
+            "blue.jpg",
+            {}
 
-//    OCEAN(
-//            {
-//                val environment = Environment()
-//                environment.set(ColorAttribute(ColorAttribute.AmbientLight, 0.6f, 0.6f, 0.6f, 1f))
-//                environment.add(DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f))
-//                environment
-//            },
-//            {},
-//            { world: World, controllers: List<Controller> ->
-//
-//            }
-//    )
+    )
 
 }
 
@@ -155,43 +86,75 @@ class FlightGroup(
         val faction: Faction,
         val aircraftType: AircraftType,
         val qty: Int = 1,
-        val players: Boolean = false,
-        val placement: Placement = Placement.RANDOM
+        val placement: PlayerStart = PlayerStart.values().random(),
+        val pilot: () -> Pilot
 )
 
-// Where entities start
-enum class Placement {
-    GRID, // grid, centered at 0, 0
-    RANDOM,
-    X_POS,
-    X_NEG
-//    Y_POS,
-//    Y_NEG,
-//    Z_POS,
-//    Z_NEG;
-}
-
-val campaign = Campaign(
-        arrayListOf(
-                Mission(
-                        "One v One",
-                        "",
-                        Place.DESERT,
-                        listOf(
-                                FlightGroup(
-                                        faction = Faction.RED,
-                                        aircraftType = AircraftType.BALLOON,
-                                        qty = 1,
-                                        placement = Placement.X_NEG
-                                ),
-                                FlightGroup(
-                                        faction = Faction.BLUE,
-                                        aircraftType = AircraftType.STORAGE,
-                                        qty = 1,
-                                        placement = Placement.X_POS
-                                )
+val campaign = Campaign(arrayListOf(
+        Mission(
+                "3v3",
+                "Ocean showdown",
+                Place.OCEAN,
+                listOf(
+                        FlightGroup(
+                                pilot = { T1000AiPilot() },
+                                faction = Faction.RED,
+                                aircraftType = AircraftType.RAPTOR,
+                                qty = 3,
+                                placement = PlayerStart.EAST
+                        ),
+                        FlightGroup(
+                                pilot = { AiPilot() },
+                                faction = Faction.BLUE,
+                                aircraftType = AircraftType.X56,
+                                qty = 3,
+                                placement = PlayerStart.WEST
                         )
-
                 )
+
+        ),
+//        Mission(
+//                "Shoot some boxes",
+//                "Shoot boxes",
+//                Place.OCEAN,
+//                listOf(
+//                        FlightGroup(
+//                                pilot = { T1000AiPilot() },
+//                                faction = Faction.RED,
+//                                aircraftType = AircraftType.RAPTOR,
+//                                qty = 3,
+//                                placement = PlayerStart.EAST
+//                        ),
+//                        FlightGroup(
+//                                pilot = { AiPilot() },
+//                                faction = Faction.BLUE,
+//                                aircraftType = AircraftType.X56,
+//                                qty = 3,
+//                                placement = PlayerStart.WEST
+//                        )
+//                )
+//
+//        ),
+        Mission(
+                "One v One",
+                "One vs One dogfight",
+                Place.DESERT,
+                listOf(
+                        FlightGroup(
+                                pilot = { T1000AiPilot() },
+                                faction = Faction.RED,
+                                aircraftType = AircraftType.RAPTOR,
+                                qty = 1,
+                                placement = PlayerStart.EAST
+                        ),
+                        FlightGroup(
+                                pilot = { AiPilot() },
+                                faction = Faction.BLUE,
+                                aircraftType = AircraftType.X56,
+                                qty = 1,
+                                placement = PlayerStart.WEST
+                        )
+                )
+
         )
-)
+))
