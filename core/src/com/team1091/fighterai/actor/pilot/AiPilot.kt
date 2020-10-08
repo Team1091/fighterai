@@ -29,10 +29,10 @@ class AiPilot : Pilot {
 
             Gdx.app.log(us.callsign, "Emergency pull up")
             return PilotControl(
-                    pitch,
-                    yaw,
-                    roll,
-                    1f,
+                    pitch = pitch,
+                    yaw = yaw,
+                    roll = roll,
+                    accel = 1f,
                     primaryWeapon = false,
                     secondaryWeapon = false
             )
@@ -62,7 +62,7 @@ class AiPilot : Pilot {
 
         if (target == null) {
             // if we dont have a target, get in formation?
-            return PilotControl(accelp = 1f)
+            return PilotControl(accel = 1f)
         }
 
         val dist = us.position.dst(target.position)
@@ -130,10 +130,10 @@ class AiPilot : Pilot {
         }
 
         return PilotControl(
-                pitchp * towards,
-                yawp * towards,
-                rollp * towards,
-                accelp,
+                pitch = pitchp * towards,
+                yaw = yawp * towards,
+                roll = rollp * towards,
+                accel = accelp,
                 primaryWeapon = primary,
                 secondaryWeapon = secondary
         )

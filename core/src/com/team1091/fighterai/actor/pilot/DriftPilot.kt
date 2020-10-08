@@ -7,9 +7,9 @@ import java.util.*
 // This is just a pilot that's out of control
 class DriftPilot : Pilot {
     val control = PilotControl(
-            Random().nextFloat(),
-            Random().nextFloat(),
-            Random().nextFloat()
+            pitch = Random().nextFloat(),
+            yaw = Random().nextFloat(),
+            roll = Random().nextFloat()
     )
 
     override fun fly(us: Actor, radar: Radar) = control

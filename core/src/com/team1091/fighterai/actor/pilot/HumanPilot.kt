@@ -17,10 +17,10 @@ class HumanPilot(val controller: Controller) : Pilot {
             }
 
             return PilotControl(
-                    accel(-controller.getAxis(Xbox.L_STICK_VERTICAL_AXIS)),
-                    deaden(controller.getAxis(Xbox.L_STICK_HORIZONTAL_AXIS)),
-                    deaden(controller.getAxis(Xbox.R_STICK_VERTICAL_AXIS)),
-                    deaden(controller.getAxis(Xbox.R_STICK_HORIZONTAL_AXIS)),
+                    accel = accel(-controller.getAxis(Xbox.L_STICK_VERTICAL_AXIS)),
+                    yaw = deaden(controller.getAxis(Xbox.L_STICK_HORIZONTAL_AXIS)),
+                    pitch = deaden(controller.getAxis(Xbox.R_STICK_VERTICAL_AXIS)),
+                    roll = deaden(controller.getAxis(Xbox.R_STICK_HORIZONTAL_AXIS)),
                     primaryWeapon = controller.getButton(Xbox.R_BUMPER),
                     secondaryWeapon = controller.getButton(Xbox.L_BUMPER)
             )
