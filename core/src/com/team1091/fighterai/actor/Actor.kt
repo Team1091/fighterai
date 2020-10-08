@@ -18,7 +18,6 @@ open class Actor(
         model: Model,
         val pilot: Pilot? = null,
         val life: Life? = null,
-        val aircraftType: AircraftType? = null,
         val primaryWeapon: Weapon? = null,
         val secondaryWeapon: Weapon? = null,
         val faction: Faction = Faction.UNALIGNED,
@@ -26,12 +25,13 @@ open class Actor(
         val radius: Float = 1f,
         val collider: Collider?,
         val respawnable: Boolean = false,
-        val engine: Engine?
+        val engine: Engine?,
+        val explosive: Explosive? = null
 ) {
     val instance = ModelInstance(model)
     val worldId = randomUUID()
 
-    fun toRadarContact():RadarContact {
+    fun toRadarContact(): RadarContact {
         return RadarContact(faction, position.cpy(), rotation.cpy(), velocity)
     }
 

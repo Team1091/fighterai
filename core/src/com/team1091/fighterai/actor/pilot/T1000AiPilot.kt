@@ -17,11 +17,11 @@ import kotlin.math.max
  */
 class T1000AiPilot : Pilot {
 
-    val groundProximityWarning = 30;
-    val targetProximityWarning = 100f;
-    val safeDistance = 300f;
-    val primaryWeaponRange = 300f;
-    val secondaryWeaponRange = 1000f;
+    val groundProximityWarning = 30
+    val targetProximityWarning = 100f
+    val safeDistance = 300f
+    val primaryWeaponRange = 300f
+    val secondaryWeaponRange = 1000f
 
     var lastTarget: RadarContact? = null
     var lastTargetTime: Long = 0
@@ -30,7 +30,7 @@ class T1000AiPilot : Pilot {
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
         // Are we diving into the ground?  Lets not.
         if (us.position.z < groundProximityWarning) {
-           return pullUp(us);
+            return pullUp(us)
         }
 
         val target = acquireTarget(us, radar)
@@ -53,7 +53,7 @@ class T1000AiPilot : Pilot {
         )
     }
 
-    fun pullUp(us: Telemetry):PilotControl {
+    fun pullUp(us: Telemetry): PilotControl {
         // figure out how we are rotated, and which way up is.
         val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
         var (pitch, yaw, roll) = turnTowards(localUp)
@@ -69,13 +69,13 @@ class T1000AiPilot : Pilot {
         )
     }
 
-    fun acquireTarget(us: Telemetry, radar: Radar):RadarContact? {
+    fun acquireTarget(us: Telemetry, radar: Radar): RadarContact? {
         val time = System.currentTimeMillis()
         val target = radar.contacts
                 .filter {
                     us.faction.isEnemy(it.faction)
                 }
-                .minByOrNull() {
+                .minByOrNull {
                     it.position.dst(us.position)
                 }
 
@@ -89,7 +89,7 @@ class T1000AiPilot : Pilot {
     }
 
     fun calculateFlightPath(us: Telemetry, target: RadarContact): Triple<Float, Float, Float> {
-        val distanceToTarget = us.position.dst(target.position);
+        val distanceToTarget = us.position.dst(target.position)
 
         // If in attack mode and we are too close, change to retreat mode.
         // if we are in retreat mode and too far away, switch to attack mode
@@ -115,8 +115,8 @@ class T1000AiPilot : Pilot {
         return Triple(pitchp * direction, yawp * direction, rollp * direction)
     }
 
-    fun calculateAcceleration(us: Telemetry, target: RadarContact):Float {
-        val distanceToTarget = us.position.dst(target.position);
+    fun calculateAcceleration(us: Telemetry, target: RadarContact): Float {
+        val distanceToTarget = us.position.dst(target.position)
         val targetTrajectory = targetTrajectory(us, target)
         val unRotatedTargetOffset = targetTrajectory.path.mul(us.rotation.cpy().conjugate())
         if (unRotatedTargetOffset.y > 0 && distanceToTarget < primaryWeaponRange && mode == AiState.ATTACK) {
@@ -126,8 +126,8 @@ class T1000AiPilot : Pilot {
         return 1f
     }
 
-    fun calculateWeaponAction(us: Telemetry, target: RadarContact):Pair<Boolean, Boolean> {
-        val distanceToTarget = us.position.dst(target.position);
+    fun calculateWeaponAction(us: Telemetry, target: RadarContact): Pair<Boolean, Boolean> {
+        val distanceToTarget = us.position.dst(target.position)
         val targetTrajectory = targetTrajectory(us, target)
         val unRotatedTargetOffset = targetTrajectory.path.mul(us.rotation.cpy().conjugate())
         if (unRotatedTargetOffset.y > 0) { // They are in front of  us

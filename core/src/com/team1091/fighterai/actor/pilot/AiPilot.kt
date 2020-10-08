@@ -2,6 +2,7 @@ package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
+import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.RadarContact
 import com.team1091.fighterai.actor.Telemetry
@@ -47,7 +48,7 @@ class AiPilot : Pilot {
                     .filter {
                         us.faction.isEnemy(it.faction)
                     }
-                    .minByOrNull() {
+                    .minByOrNull {
                         it.position.dst(us.position)
                     }
 //            if(target==null){
@@ -121,11 +122,12 @@ class AiPilot : Pilot {
             }
 
         } else {
-            if (mode == AiState.ATTACK) {
-                accelp = 1f
-            } else { // retreat
-                accelp = 1f
-            }
+            accelp = 1f
+//            if (mode == AiState.ATTACK) {
+//                accelp = 1f
+//            } else { // retreat
+//                accelp = 1f
+//            }
         }
 
         return PilotControl(

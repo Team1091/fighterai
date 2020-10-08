@@ -1,30 +1,18 @@
 package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.Telemetry
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
-import com.team1091.fighterai.types.MissileType
 import kotlin.math.max
 
 // Steers a missile at an opponent
-class MissileGuidance(val target: Actor, val missileType: MissileType, val world:World) : Pilot {
+class MissileGuidance(val target: Actor) : Pilot {
 
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
-        // if we are close enough, detonate
-        if (target.position.dst(us.position) < missileType.explosionRadius) {
-            // TODO: move to detonate
-            world.actors
-                    .filter { it.position.dst(us.position) < missileType.explosionRadius }
-                    .forEach { it.life?.takeDamage(world, it, missileType.damage) }
 
-            // destroy ourselves
-            world.removeActor(us.worldId)
-        }
-        
         // else calculate where they will be, and fly towards that location
         val solution = leadTarget(
                 us.position,
@@ -40,7 +28,10 @@ class MissileGuidance(val target: Actor, val missileType: MissileType, val world
         return PilotControl(
                 pitch = pitch,
                 yaw = yaw,
-                accel = if (unRotatedTargetOffset.y > 0) 1f else 0.25f
+                accel = if (unRotatedTargetOffset.y > 0) 1f else 0.25f,
+                // if we are close enough, detonate
+                secondaryWeapon = (us.secondaryWeaponRange != null &&
+                        target.position.dst(us.position) <us.secondaryWeaponRange)
         )
     }
 }

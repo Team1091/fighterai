@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Faction
@@ -24,12 +25,12 @@ import com.team1091.fighterai.types.AircraftType
 import com.team1091.fighterai.types.BulletType
 import com.team1091.fighterai.types.MissileType
 
-
 enum class Place(
         environmentSetup: () -> Environment,
         val props: (world: World) -> Unit,
         val ships: (world: World, controllers: List<Controller>) -> Unit,
-        val environment: Environment = environmentSetup()) {
+        val environment: Environment = environmentSetup()
+) {
 
     DESERT(
             environmentSetup = {
@@ -47,9 +48,9 @@ enum class Place(
                 imgTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat)
 
                 val imgTextureRegion = com.badlogic.gdx.graphics.g2d.TextureRegion(imgTexture)
-                imgTextureRegion.setRegion(0, 0, imgTexture.getWidth() * 10, imgTexture.getHeight() * 10);
+                imgTextureRegion.setRegion(0, 0, imgTexture.width * 10, imgTexture.height * 10)
 
-                var modelBuilder = com.badlogic.gdx.graphics.g3d.utils.ModelBuilder()
+                val modelBuilder = ModelBuilder()
 
                 val attr = (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
                 modelBuilder.begin()
@@ -58,7 +59,7 @@ enum class Place(
                                 -size, size, 0f,
                                 -size, -size, 0f,
                                 size, -size, 0f,
-                                0f, 0f, 1f);
+                                0f, 0f, 1f)
 
                 val groundModel = modelBuilder.end()
 
@@ -94,32 +95,11 @@ enum class Place(
 
             },
             ships = { world: World, controllers: List<Controller> ->
-                // players
-//                controllers.forEachIndexed { i, controller ->
-//                    Gdx.app.log("Controller Found, Assigning ship", controller.name)
-//                    val aircraftType = AircraftType.RAPTOR // if(i%2==0)  AircraftType.SWORDFISH else AircraftType.TILAPIA
-//                    val playerStart = PlayerStart.values()[i]
-//                    val actor = Actor(
-//                            position = playerStart.pos.cpy(),
-//                            rotation = playerStart.rotation.cpy(),
-//                            velocity = 300f,
-//                            model = aircraftType.model,
-//                            pilot = HumanPilot(controller),
-//                            life = Life(aircraftType.life),
-//                            aircraftType = aircraftType,
-//                            primaryWeapon = Cannon(BulletType.RAILGUN),
-//                            secondaryWeapon = MissileRack(MissileType.AMRAAM),
-//                            radius = aircraftType.radius,
-//                            collider = DamageCollider(4f),
-//                            respawnable = true
-//                    )
-//                    fighterGame.actors.add(actor)
-//                    fighterGame.players.add(actor)
-//                }
+
 
                 listOf(
-                        Triple(T1000AiPilot(), PlayerStart.LEFT, Faction.BLUE),
-                        Triple(AiPilot(), PlayerStart.RIGHT, Faction.RED)
+                        Triple(T1000AiPilot(), PlayerStart.WEST, Faction.BLUE),
+                        Triple(AiPilot(), PlayerStart.EAST, Faction.RED)
                 ).forEach {
 
                     val (pilot, playerStart, faction) = it
@@ -129,16 +109,15 @@ enum class Place(
                     world.actors.add(
                             Actor(
                                     callsign = faction.name + " " + pilot.javaClass.simpleName,
-                                    faction = faction,
                                     position = playerStart.pos.cpy(),
                                     rotation = playerStart.rotation.cpy(),
                                     velocity = 300f,
                                     model = aircraftType.model,
                                     pilot = pilot,
                                     life = Life(aircraftType.life),
-                                    aircraftType = aircraftType,
                                     primaryWeapon = Cannon(BulletType.M61_VULCAN),
                                     secondaryWeapon = MissileRack(MissileType.AMRAAM),
+                                    faction = faction,
                                     collider = DamageCollider(4f),
                                     respawnable = true,
                                     engine = aircraftType.engine
@@ -200,13 +179,13 @@ val campaign = Campaign(
                         Place.DESERT,
                         listOf(
                                 FlightGroup(
-                                        Faction.RED,
+                                        faction = Faction.RED,
                                         aircraftType = AircraftType.BALLOON,
                                         qty = 1,
                                         placement = Placement.X_NEG
                                 ),
                                 FlightGroup(
-                                        Faction.BLUE,
+                                       faction =  Faction.BLUE,
                                         aircraftType = AircraftType.STORAGE,
                                         qty = 1,
                                         placement = Placement.X_POS
