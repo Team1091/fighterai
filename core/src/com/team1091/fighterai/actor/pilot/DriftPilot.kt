@@ -1,7 +1,7 @@
 package com.team1091.fighterai.actor.pilot
 
-import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
+import com.team1091.fighterai.actor.Telemetry
 import java.util.*
 
 // This is just a pilot that's out of control
@@ -12,5 +12,5 @@ class DriftPilot : Pilot {
             roll = Random().nextFloat()
     )
 
-    override fun fly(us: Actor, radar: Radar) = control
+    override fun fly(us: Telemetry, radar: Radar) = control
 }

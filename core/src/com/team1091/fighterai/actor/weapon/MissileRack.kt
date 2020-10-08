@@ -3,7 +3,10 @@ package com.team1091.fighterai.actor.weapon
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.World
-import com.team1091.fighterai.actor.*
+import com.team1091.fighterai.actor.Actor
+import com.team1091.fighterai.actor.DamageCollider
+import com.team1091.fighterai.actor.Expiration
+import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.pilot.MissileGuidance
 import com.team1091.fighterai.actor.pilot.beingAimedAtBy
 import com.team1091.fighterai.types.MissileType
@@ -37,15 +40,18 @@ class MissileRack(val missileType: MissileType) : Launcher(
                 velocity = velocity,
                 model = missileType.model,
                 pilot = MissileGuidance(target),
-                explosive = Explosive(missileType.damage, missileType.explosionRadius),
+
                 life = Life(1f),
                 expiration = Expiration(missileType.expiration),
                 radius = missileType.radius,
                 collider = DamageCollider(1f),
-                engine = missileType.engine
+                engine = missileType.engine,
+                secondaryWeapon = Explosive(missileType.damage, missileType.explosionRadius)
         ))
 
     }
 
     override fun getVelocity(): Float = launchVelocity
+    override fun getDuration(): Float = missileType.expiration / 1000f
+
 }

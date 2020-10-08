@@ -3,6 +3,7 @@ package com.team1091.fighterai.actor.pilot
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
+import com.team1091.fighterai.actor.Telemetry
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
 import kotlin.math.max
@@ -10,11 +11,7 @@ import kotlin.math.max
 // Steers a missile at an opponent
 class MissileGuidance(val target: Actor) : Pilot {
 
-    override fun fly(us: Actor, radar: Radar): PilotControl {
-        // if we are close enough, detonate
-        if (us.explosive != null && target.position.dst(us.position) < us.explosive.explosionRadius) {
-            us.explosive.detonate = true
-        }
+    override fun fly(us: Telemetry, radar: Radar): PilotControl {
 
         // else calculate where they will be, and fly towards that location
         val solution = leadTarget(
@@ -31,7 +28,9 @@ class MissileGuidance(val target: Actor) : Pilot {
         return PilotControl(
                 pitch = pitch,
                 yaw = yaw,
-                accel = if (unRotatedTargetOffset.y > 0) 1f else 0.25f
+                accel = if (unRotatedTargetOffset.y > 0) 1f else 0.25f,
+                // if we are close enough, detonate. velocity takes the place of range here
+                secondaryWeapon = target.position.dst(us.position) < us.secondaryWeaponVelocity
         )
     }
 }

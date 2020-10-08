@@ -2,9 +2,9 @@ package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.RadarContact
+import com.team1091.fighterai.actor.Telemetry
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
 import com.team1091.fighterai.types.up
@@ -19,7 +19,7 @@ class AiPilot : Pilot {
     var lastTargetTime: Long = 0
     var mode: AiState = AiState.ATTACK
 
-    override fun fly(us: Actor, radar: Radar): PilotControl {
+    override fun fly(us: Telemetry, radar: Radar): PilotControl {
 
         // Are we diving into the ground?  Lets not.
         if (us.position.z < 30) {
@@ -93,7 +93,7 @@ class AiPilot : Pilot {
                 us.position,
                 target.position,
                 Vector3(0f, target.velocity, 0f).mul(target.rotation),
-                max(us.velocity, us.primaryWeapon?.getVelocity() ?: 3f)
+                max(us.velocity, us.primaryWeaponVelocity)
         )
 
         val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())

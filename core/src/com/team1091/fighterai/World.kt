@@ -30,7 +30,7 @@ class World {
             if (craft.pilot != null) {
 
                 val visibleActors = findInForwardArc(this, craft)
-                val pilotControl = craft.pilot.fly(craft, Radar(visibleActors.map { it.toRadarContact() }))
+                val pilotControl = craft.pilot.fly(craft.toTelemetry(), Radar(visibleActors.map { it.toRadarContact() }))
 
                 // If we have an engine, control us
                 craft.engine?.also { engine ->
@@ -50,7 +50,6 @@ class World {
                     craft.secondaryWeapon?.fire(this, craft)
                 }
             }
-            craft.explosive?.act(craft, this)
 
             with(craft) {
                 velocity *= 1f - (0.8f * dt) // Slow down, air resistance?
@@ -112,4 +111,12 @@ class World {
         }
     }
 
+    fun removeActor(worldId: UUID) {
+        var actor = actors.filter { it.worldId == worldId }.firstOrNull()
+        if (actor == null) {
+            return;
+        }
+
+        removeActors.add(actor);
+    }
 }

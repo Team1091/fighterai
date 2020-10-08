@@ -11,4 +11,5 @@ interface Weapon {
     fun project(world: World, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float)
 
     fun getVelocity(): Float
+    fun getDuration(): Float
 }

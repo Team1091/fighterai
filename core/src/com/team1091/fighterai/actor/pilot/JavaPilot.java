@@ -2,8 +2,8 @@ package com.team1091.fighterai.actor.pilot;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
-import com.team1091.fighterai.actor.Actor;
 import com.team1091.fighterai.actor.Radar;
+import com.team1091.fighterai.actor.Telemetry;
 import com.team1091.fighterai.math.StickPosition;
 import com.team1091.fighterai.types.TypesKt;
 
@@ -12,7 +12,7 @@ import static com.team1091.fighterai.math.MathsKt.turnTowards;
 public class JavaPilot implements Pilot {
 
     @Override
-    public PilotControl fly(Actor us, Radar radar) {
+    public PilotControl fly(Telemetry us, Radar radar) {
 
         if (us.getPosition().z < 30) {
             // figure out how we are rotated, and which way up is.
