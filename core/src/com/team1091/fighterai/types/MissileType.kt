@@ -23,7 +23,7 @@ enum class MissileType(
             damage = 20f,
             explosionRadius = 5f,
             expiration = 10000,
-            model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
+            model = modelBuilder.createCone(0.5f, 1f, 0.5f, 3,
                     Material(ColorAttribute.createDiffuse(Color.BLACK)),
                     attr
             ),
@@ -40,7 +40,7 @@ enum class MissileType(
             damage = 10f,
             explosionRadius = 5f,
             expiration = 8000,
-            model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
+            model = modelBuilder.createCone(0.5f, 1f, 0.5f, 3,
                     Material(ColorAttribute.createDiffuse(Color.CYAN)),
                     attr
             ),
