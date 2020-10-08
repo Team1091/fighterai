@@ -92,7 +92,11 @@ class World {
         if (respawnActors.isNotEmpty()) {
             respawnActors.forEach {
 
-                val start = PlayerStart.values()[Random().nextInt(PlayerStart.values().size)]
+                // Find furthest player start
+                val start = PlayerStart.values().maxByOrNull { playerStart ->
+                    this.actors.map { actor -> playerStart.pos.dst(actor.position) }.minOrNull() ?: 0f
+                }!!
+
                 Gdx.app.log(it.callsign, start.name)
                 it.position.set(start.pos)
                 it.rotation.set(start.rotation)

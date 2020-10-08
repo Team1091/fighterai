@@ -241,15 +241,14 @@ class FighterAIGame : ApplicationAdapter() {
     }
 }
 
-const val size = 500f
+const val size = 1000f
 
 enum class PlayerStart(val pos: Vector3, val rotation: Quaternion) {
-    //	UP(Vector3(0f, 0f, size), Quaternion().setEulerAngles(0f, -90f, 0f)),
-//	DOWN(Vector3(0f, 0f, -size), Quaternion().setEulerAngles(0f, 90f, 0f)),
-    LEFT(Vector3(-size, 0f, 100f), Quaternion().setEulerAngles(0f, 0f, -90f)),
-    RIGHT(Vector3(size, 0f, 100f), Quaternion().setEulerAngles(0f, 0f, 90f)),
-    FORWARDS(Vector3(0f, -size, 100f), Quaternion().setEulerAngles(0f, 0f, 0f)),
-    BACKWARDS(Vector3(0f, size, 100f), Quaternion().setEulerAngles(0f, 0f, 180f)),
+
+    WEST(Vector3(-size, 0f, 200f), Quaternion().setEulerAngles(0f, 0f, -90f)),
+    EAST(Vector3(size, 0f, 200f), Quaternion().setEulerAngles(0f, 0f, 90f)),
+    SOUTH(Vector3(0f, -size, 200f), Quaternion().setEulerAngles(0f, 0f, 0f)),
+    NORTH(Vector3(0f, size, 200f), Quaternion().setEulerAngles(0f, 0f, 180f)),
 }
 
 enum class SplitScreen(val horizontalDivs: Int, val verticalDivs: Int) {

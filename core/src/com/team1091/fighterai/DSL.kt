@@ -29,7 +29,8 @@ enum class Place(
         environmentSetup: () -> Environment,
         val props: (world: World) -> Unit,
         val ships: (world: World, controllers: List<Controller>) -> Unit,
-        val environment: Environment = environmentSetup()) {
+        val environment: Environment = environmentSetup()
+) {
 
     DESERT(
             environmentSetup = {
@@ -94,32 +95,11 @@ enum class Place(
 
             },
             ships = { world: World, controllers: List<Controller> ->
-                // players
-//                controllers.forEachIndexed { i, controller ->
-//                    Gdx.app.log("Controller Found, Assigning ship", controller.name)
-//                    val aircraftType = AircraftType.RAPTOR // if(i%2==0)  AircraftType.SWORDFISH else AircraftType.TILAPIA
-//                    val playerStart = PlayerStart.values()[i]
-//                    val actor = Actor(
-//                            position = playerStart.pos.cpy(),
-//                            rotation = playerStart.rotation.cpy(),
-//                            velocity = 300f,
-//                            model = aircraftType.model,
-//                            pilot = HumanPilot(controller),
-//                            life = Life(aircraftType.life),
-//                            aircraftType = aircraftType,
-//                            primaryWeapon = Cannon(BulletType.RAILGUN),
-//                            secondaryWeapon = MissileRack(MissileType.AMRAAM),
-//                            radius = aircraftType.radius,
-//                            collider = DamageCollider(4f),
-//                            respawnable = true
-//                    )
-//                    fighterGame.actors.add(actor)
-//                    fighterGame.players.add(actor)
-//                }
+
 
                 listOf(
-                        Triple(T1000AiPilot(), PlayerStart.LEFT, Faction.BLUE),
-                        Triple(AiPilot(), PlayerStart.RIGHT, Faction.RED)
+                        Triple(T1000AiPilot(), PlayerStart.WEST, Faction.BLUE),
+                        Triple(AiPilot(), PlayerStart.EAST, Faction.RED)
                 ).forEach {
 
                     val (pilot, playerStart, faction) = it
@@ -199,13 +179,13 @@ val campaign = Campaign(
                         Place.DESERT,
                         listOf(
                                 FlightGroup(
-                                        Faction.RED,
+                                        faction = Faction.RED,
                                         aircraftType = AircraftType.BALLOON,
                                         qty = 1,
                                         placement = Placement.X_NEG
                                 ),
                                 FlightGroup(
-                                        Faction.BLUE,
+                                       faction =  Faction.BLUE,
                                         aircraftType = AircraftType.STORAGE,
                                         qty = 1,
                                         placement = Placement.X_POS
