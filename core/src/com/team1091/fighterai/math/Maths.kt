@@ -71,6 +71,10 @@ data class StickPosition(
         var roll: Float
 )
 
+fun <T : Comparable<T>?> limit(o: T, min: T, max: T): T {
+    if (o!!.compareTo(min) < 0) return min
+    return if (o.compareTo(max) > 0) max else o
+}
 
 // Used to find a target in the forward arc, closest first.
 fun findInForwardArc(
