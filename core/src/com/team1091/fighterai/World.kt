@@ -13,6 +13,7 @@ import com.team1091.fighterai.types.up
 import java.util.*
 import kotlin.math.pow
 
+val g = -10f
 class World(val audio: IAudioManager) {
     val actors = mutableListOf<Actor>()
     val newActors = mutableListOf<Actor>()
@@ -34,7 +35,10 @@ class World(val audio: IAudioManager) {
                     craft.rotation.mul(Quaternion(up, -1f * pilotControl.yaw * engine.maxYaw * dt))
                     craft.rotation.mul(Quaternion(right, pilotControl.pitch * engine.maxPitch * dt))
                     craft.rotation.mul(Quaternion(forward, pilotControl.roll * engine.maxRoll * dt))
-                    craft.velocity += pilotControl.accel * engine.maxAccel * dt // Speed up
+                    craft.rotation.nor()
+
+                    val forwardVec = forward.cpy().mul(craft.rotation)
+                    craft.velocity += (pilotControl.accel * engine.maxAccel + forwardVec.z * g) * dt // Speed up
                 }
 
                 // if primary shoot
@@ -97,6 +101,7 @@ class World(val audio: IAudioManager) {
                 it.position.set(start.pos)
                 it.rotation.set(start.rotation)
                 it.velocity = 300f
+
                 if (it.life != null) {
                     it.life.cur = it.life.max
                 }

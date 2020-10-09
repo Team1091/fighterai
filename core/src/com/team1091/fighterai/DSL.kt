@@ -91,28 +91,7 @@ class FlightGroup(
 )
 
 val campaign = Campaign(arrayListOf(
-        Mission(
-                "3v3",
-                "Ocean showdown",
-                Place.OCEAN,
-                listOf(
-                        FlightGroup(
-                                pilot = { T1000AiPilot() },
-                                faction = Faction.RED,
-                                aircraftType = AircraftType.RAPTOR,
-                                qty = 3,
-                                placement = PlayerStart.EAST
-                        ),
-                        FlightGroup(
-                                pilot = { AiPilot() },
-                                faction = Faction.BLUE,
-                                aircraftType = AircraftType.X56,
-                                qty = 3,
-                                placement = PlayerStart.WEST
-                        )
-                )
 
-        ),
 //        Mission(
 //                "Shoot some boxes",
 //                "Shoot boxes",
@@ -152,6 +131,28 @@ val campaign = Campaign(arrayListOf(
                                 faction = Faction.BLUE,
                                 aircraftType = AircraftType.X56,
                                 qty = 1,
+                                placement = PlayerStart.WEST
+                        )
+                )
+
+        ),
+        Mission(
+                "3v3",
+                "Ocean showdown",
+                Place.OCEAN,
+                listOf(
+                        FlightGroup(
+                                pilot = { T1000AiPilot() },
+                                faction = Faction.RED,
+                                aircraftType = AircraftType.RAPTOR,
+                                qty = 3,
+                                placement = PlayerStart.EAST
+                        ),
+                        FlightGroup(
+                                pilot = { AiPilot() },
+                                faction = Faction.BLUE,
+                                aircraftType = AircraftType.X56,
+                                qty = 3,
                                 placement = PlayerStart.WEST
                         )
                 )
