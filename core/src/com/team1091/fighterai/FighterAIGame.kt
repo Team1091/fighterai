@@ -4,6 +4,8 @@ import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.*
+import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelBatch
@@ -22,7 +24,7 @@ import com.team1091.fighterai.types.AircraftType
 import com.team1091.fighterai.types.BulletType
 import com.team1091.fighterai.types.MissileType
 import com.team1091.fighterai.types.up
-import java.lang.Integer.max
+
 
 class FighterAIGame : ApplicationAdapter() {
 
@@ -31,11 +33,16 @@ class FighterAIGame : ApplicationAdapter() {
     internal lateinit var modelBatch: ModelBatch
     internal lateinit var environment: Environment
     internal lateinit var shapeRenderer: ShapeRenderer
+    internal lateinit var spriteBatch: SpriteBatch
+    internal lateinit var font: BitmapFont
+
+
 //    internal lateinit var envCubemap: EnvironmentCubemap
 
     val audio: AudioManager = AudioManager()
     val world = World(audio)
-    var splitScreen: SplitScreen = SplitScreen.ONE
+
+    // these are ones we should watch
     var players = mutableListOf<Actor>()
 
     override fun create() {
@@ -43,10 +50,10 @@ class FighterAIGame : ApplicationAdapter() {
 
         modelBatch = ModelBatch()
         shapeRenderer = ShapeRenderer()
-
+        spriteBatch = SpriteBatch()
+        font = BitmapFont()
 
         val mission = campaign.missions.first()
-
 
 
         // Setup of scenario
@@ -84,15 +91,17 @@ class FighterAIGame : ApplicationAdapter() {
 
             val aircraftType = flightGroup.aircraftType
 
-            repeat(flightGroup.qty) {offset->
+            repeat(flightGroup.qty) { offset ->
+                val pilot = flightGroup.pilot()
                 world.actors.add(
+
                         Actor(
-                                callsign = flightGroup.faction.name + " " + flightGroup.pilot.javaClass.simpleName,
-                                position = flightGroup.placement.pos.cpy().add( up.cpy().scl(offset.toFloat() * 10)),
+                                callsign = flightGroup.faction.name + " " + pilot.javaClass.simpleName,
+                                position = flightGroup.placement.pos.cpy().add(up.cpy().scl(offset.toFloat() * 10)),
                                 rotation = flightGroup.placement.rotation.cpy(),
                                 velocity = 300f,
                                 model = aircraftType.model,
-                                pilot = flightGroup.pilot(),
+                                pilot = pilot,
                                 life = Life(aircraftType.life),
                                 primaryWeapon = Cannon(BulletType.M61_VULCAN),
                                 secondaryWeapon = MissileRack(MissileType.HYDRA),
@@ -105,26 +114,14 @@ class FighterAIGame : ApplicationAdapter() {
             }
 
         }
+        players.addAll(world.actors)
 
 // No humans
 //        val controllers = Controllers.getControllers().take(4)
 //        mission.place.ships(world, controllers)
 //        println("Controllers $controllers")
 
-//        splitScreen = when (controllers.size) {
-//            0, 1 -> SplitScreen.ONE
-//            2 -> SplitScreen.TWO
-//            else -> SplitScreen.FOUR
-//        }
-
-        splitScreen = SplitScreen.ONE
-
-        cam = when (splitScreen) {
-            SplitScreen.ONE -> PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
-            SplitScreen.TWO -> PerspectiveCamera(67f, Gdx.graphics.width.toFloat() / 2f, Gdx.graphics.height.toFloat())
-            SplitScreen.FOUR -> PerspectiveCamera(67f, Gdx.graphics.width.toFloat() / 2f, Gdx.graphics.height.toFloat() / 2f)
-        }
-
+        cam = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         cam.near = 1f
         cam.far = 10000f
 
@@ -189,85 +186,62 @@ class FighterAIGame : ApplicationAdapter() {
 
 
         // Render
-        for (i in 0 until max(players.size, 1)) {
-            val player = players.getOrNull(i)
+        val width: Int = Gdx.graphics.width
+        val height: Int = Gdx.graphics.height
+        Gdx.gl.glViewport(0, 0, width, height)
+        Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1f)
 
-            val width: Int = Gdx.graphics.width / splitScreen.horizontalDivs
-            val height: Int = Gdx.graphics.height / splitScreen.verticalDivs
+        // Camera Stuff
+        look(null)
 
-            val offsetX: Int = if (i % 2 == 1) width else 0
-            val offsetY: Int = if (splitScreen == SplitScreen.FOUR && i > 1) height else 0
+        // Render Models
+        modelBatch.begin(cam)
+        for (model in world.otherGeometry) {
+            modelBatch.render(model, environment)
+        }
+        for (craft in world.actors) {
+            modelBatch.render(craft.instance, environment)
+        }
+        modelBatch.end()
 
-//            when (splitScreen) {
-//                SplitScreen.ONE -> Gdx.gl.glViewport(0, 0, width, height)
-//                SplitScreen.TWO -> {
-//                    if (i == 0) {
-//                        Gdx.gl.glViewport(0, 0, width, height)
-//                    } else {
-//                        Gdx.gl.glViewport(width, 0, width, height)
-//                    }
-//                }
-//                SplitScreen.FOUR -> {
-//                    when (i) {
-//                        0 -> Gdx.gl.glViewport(0, 0, width, height)
-//                        1 -> Gdx.gl.glViewport(width, 0, width, height)
-//                        2 -> Gdx.gl.glViewport(0, height, width, height)
-//                        else -> Gdx.gl.glViewport(width, height, width, height)
-//                    }
-//                }
-//            }
-            Gdx.gl.glViewport(offsetX, offsetY, width, height)
-            Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1f)
-            look(player)
+        // Draw HUD
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+        players.forEachIndexed { index, player ->
 
-            // TODO: get cubemap working
-            //envCubemap.render(cam)
+            val conj = player.rotation.cpy().conjugate()
+            val yRow = index * 300f
 
-            modelBatch.begin(cam)
-            for (model in world.otherGeometry) {
-                modelBatch.render(model, environment)
-            }
-            for (craft in world.actors) {
-                modelBatch.render(craft.instance, environment)
-            }
-            modelBatch.end()
-
-            // Draw HUD
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
-            shapeRenderer.setColor(Color.DARK_GRAY)
-            shapeRenderer.end()
-
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-            shapeRenderer.setColor(Color.GREEN)
-            shapeRenderer.rect(960f - 5, 540f - 5, 10f, 10f)
-
-            if (player != null) {
-                val conj = player.rotation.cpy().conjugate()
-
-                shapeRenderer.rect(0f, 0f, 200f, 200f)
-                shapeRenderer.rect(200f, 0f, 200f, 200f)
+            shapeRenderer.setColor(Color.ORANGE)
+            shapeRenderer.rect(0f, yRow, 200f, 200f)
+            shapeRenderer.rect(200f, yRow, 200f, 200f)
 
 //                shapeRenderer.rect
-                for (craft in world.actors) {
-                    if (craft.engine != null && craft != player) {
-                        val pointerToCraft = craft.position.cpy().sub(player.position).mul(conj)
-                        val dist = pointerToCraft.dst(0f, 0f, 0f)
-                        val x = pointerToCraft.x / dist
-                        val y = pointerToCraft.z / dist
-
-                        if (pointerToCraft.y > 0) { // forward arc
-                            shapeRenderer.rect(100f + x * 100f, 100f + y * 100f, 1f, 1f)
-                        } else { // rear arc
-                            shapeRenderer.rect(300f - x * 100f, 100f - y * 100f, 1f, 1f)
-                        }
-
+            for (craft in world.actors) {
+                if (craft.engine != null && craft != player) {
+                    val pointerToCraft = craft.position.cpy().sub(player.position).mul(conj)
+                    val dist = pointerToCraft.dst(0f, 0f, 0f)
+                    val x = pointerToCraft.x / dist
+                    val y = pointerToCraft.z / dist
+                    shapeRenderer.setColor(if (craft.faction.isEnemy(player.faction)) Color.RED else Color.GREEN)
+                    if (pointerToCraft.y > 0) { // forward arc
+                        shapeRenderer.rect(100f + x * 100f, 100f + y * 100f + yRow, 1f, 1f)
+                    } else { // rear arc
+                        shapeRenderer.rect(300f - x * 100f, 100f - y * 100f + yRow, 1f, 1f)
                     }
+
                 }
             }
 
-            shapeRenderer.end()
-
         }
+        shapeRenderer.end()
+
+        spriteBatch.begin()
+        players.forEachIndexed { index, player ->
+            val yRow = (index * 300f) + 300f
+            font.draw(spriteBatch, player.callsign, 0f, yRow)
+            font.draw(spriteBatch, "Vel:"+player.velocity.toInt() +" Ele:"+player.position.z.toInt(),0f, yRow-16)
+        }
+        spriteBatch.end()
 
 
     }
@@ -292,10 +266,4 @@ enum class PlayerStart(val pos: Vector3, val rotation: Quaternion) {
     EAST(Vector3(size, 0f, 200f), Quaternion().setEulerAngles(0f, 0f, 90f)),
     SOUTH(Vector3(0f, -size, 200f), Quaternion().setEulerAngles(0f, 0f, 0f)),
     NORTH(Vector3(0f, size, 200f), Quaternion().setEulerAngles(0f, 0f, 180f)),
-}
-
-enum class SplitScreen(val horizontalDivs: Int, val verticalDivs: Int) {
-    ONE(1, 1),
-    TWO(2, 1),
-    FOUR(2, 2)
 }
