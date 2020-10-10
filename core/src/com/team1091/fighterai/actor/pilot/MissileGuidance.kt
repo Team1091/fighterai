@@ -9,6 +9,7 @@ import com.team1091.fighterai.math.turnTowards
 import kotlin.math.max
 
 // Steers a missile at an opponent
+// Detailed instructions about how this works here:  https://www.youtube.com/watch?v=bZe5J8SVCYQ
 class MissileGuidance(val target: Actor) : Pilot {
 
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
