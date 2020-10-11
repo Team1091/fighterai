@@ -5,6 +5,9 @@ import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 
+/**
+ * Self destruction device, used in rockets and bombs
+ */
 class Explosive(
         val damage: Float,
         val explosionRadius: Float
