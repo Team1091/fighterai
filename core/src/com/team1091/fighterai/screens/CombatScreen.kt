@@ -3,7 +3,10 @@ package com.team1091.fighterai.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
-import com.badlogic.gdx.graphics.*
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelBatch
@@ -11,7 +14,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.math.Vector3
+import com.team1091.fighterai.CameraMan
 import com.team1091.fighterai.FighterAIGame
 import com.team1091.fighterai.Mission
 import com.team1091.fighterai.World
@@ -20,7 +23,6 @@ import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.weapon.Cannon
 import com.team1091.fighterai.actor.weapon.MissileRack
-import com.team1091.fighterai.size
 import com.team1091.fighterai.types.BulletType
 import com.team1091.fighterai.types.MissileType
 import com.team1091.fighterai.types.up
@@ -30,13 +32,15 @@ class CombatScreen(
         val mission: Mission
 ) : Screen {
 
-    val cam: PerspectiveCamera
+
     val modelBatch = ModelBatch()
     val shapeRenderer = ShapeRenderer()
     val spriteBatch = fighterAIGame.spriteBatch
     val font = fighterAIGame.font
 
     val world = World(fighterAIGame.audio)
+    val cameraMan = CameraMan(world)
+
     val environment: Environment
     val players = mutableListOf<Actor>()   // these are ones we should watch
 
@@ -106,9 +110,6 @@ class CombatScreen(
 //        mission.place.ships(world, controllers)
 //        println("Controllers $controllers")
 
-        cam = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
-        cam.near = 1f
-        cam.far = 10000f
 
     }
 
@@ -132,10 +133,10 @@ class CombatScreen(
         Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1f)
 
         // Camera Stuff
-        look(null)
+        cameraMan.look(delta)
 
         // Render Models
-        modelBatch.begin(cam)
+        modelBatch.begin(cameraMan.cam)
         for (model in world.otherGeometry) {
             modelBatch.render(model, environment)
         }
@@ -210,51 +211,5 @@ class CombatScreen(
         shapeRenderer.dispose()
     }
 
-
-    private fun look(actor: Actor?) {
-
-        if (actor != null) {
-            cam.position.set(actor.position.cpy().add(Vector3(0f, -5f, 1f).mul(actor.rotation)))
-            cam.lookAt(actor.position.cpy().add(Vector3(0f, 1000f, 0f).mul(actor.rotation)))
-            cam.up.set(up.cpy().mul(actor.rotation))
-
-            // TODO: comment this is for an overview
-        } else if (true) {
-            val anActor = world.actors.firstOrNull { it.life != null && it.life.cur > 0 }
-
-            cam.up.set(0f, 0f, 1f)
-            cam.position.set(200f, 200f, 150f)
-            if (anActor != null) {
-                cam.lookAt(anActor.position)
-            } else
-                cam.lookAt(0f, 0f, 0f)
-
-
-        } else {
-
-            val randomActor = world.actors.find { it.engine != null }
-
-            if (randomActor != null) {
-                cam.position.set(randomActor.position.cpy().add(Vector3(0f, -5f, 1f).mul(randomActor.rotation)))
-
-                cam.lookAt(randomActor.position.cpy().add(Vector3(0f, 1000f, 0f).mul(randomActor.rotation)))
-//                var target = (actor.pilot as AiPilot).lastTarget?.position
-//                if (target == null) {
-//                    target = actor.position.cpy().add(Vector3(0f, 1000f, 0f).mul(actor.rotation))
-//                }
-//                cam.lookAt(target)
-
-                cam.up.set(up.cpy().mul(randomActor.rotation))
-
-            } else {
-                cam.position.set(size / 2f, size / 2f, size / 2f)
-                cam.lookAt(0f, 0f, 0f)
-                cam.up.set(0f, 0f, 1f)
-            }
-
-
-        }
-        cam.update()
-    }
 
 }
