@@ -12,9 +12,10 @@ import com.team1091.fighterai.actor.pilot.beingAimedAtBy
 import com.team1091.fighterai.types.MissileType
 
 // Fires homing ordinance
-class MissileRack(val missileType: MissileType) : Launcher(
+class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
         missileType.refireMS,
-        missileType.launchVelocity
+        missileType.launchVelocity,
+        maxAmmoCount
 ) {
     override fun project(world: World, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float) {
 

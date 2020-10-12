@@ -11,6 +11,7 @@ import com.team1091.fighterai.types.right
 abstract class Launcher(
         val refireMS: Long,
         val launchVelocity: Float,
+        val maxAmmoCount: Int,
         val tubeOffsets: List<Vector3> = listOf(
                 right.cpy().scl(2f).add(forward),
                 left.cpy().scl(2f).add(forward),
@@ -19,13 +20,19 @@ abstract class Launcher(
         )
 ) : Weapon {
 
-    var lastFired: Long = 0
-    var nextTube = 0
+    private var lastFired: Long = 0
+    private var nextTube = 0
+    private var ammoCount = maxAmmoCount
 
     override fun fire(world: World, shooter: Actor) {
         val millis = System.currentTimeMillis()
-        if (lastFired + refireMS < millis) {
 
+        if (ammoCount <= 0) {
+            return
+        }
+
+        if (lastFired + refireMS < millis) {
+            ammoCount--
             val offset = tubeOffsets[nextTube++].cpy().mul(shooter.rotation)
 
             if (nextTube >= tubeOffsets.size)
@@ -43,4 +50,8 @@ abstract class Launcher(
         }
     }
 
+    override fun getAmmo(): Int = ammoCount
+    override fun refillAmmo() {
+        ammoCount = maxAmmoCount
+    }
 }
