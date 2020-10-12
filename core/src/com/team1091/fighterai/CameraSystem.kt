@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.types.up
 
-class CameraMan(
+class CameraSystem(
         val world: World
 ) {
     val cam: PerspectiveCamera
@@ -45,7 +45,7 @@ class CameraMan(
             // dolly.vel.add(diff.nor())
             cam.lookAt(actor.position.cpy().add(Vector3(0f, 1000f, 0f).mul(actor.rotation)))
             cam.up.set(up.cpy().mul(actor.rotation))
-
+            // cam.up.set(up)
 
         } else {
             // Look at from origin

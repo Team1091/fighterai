@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.team1091.fighterai.CameraMan
+import com.team1091.fighterai.CameraSystem
 import com.team1091.fighterai.FighterAIGame
 import com.team1091.fighterai.Mission
 import com.team1091.fighterai.World
@@ -39,7 +39,7 @@ class CombatScreen(
     val font = fighterAIGame.font
 
     val world = World(fighterAIGame.audio)
-    val cameraMan = CameraMan(world)
+    val cameraMan = CameraSystem(world)
 
     val environment: Environment
     val players = mutableListOf<Actor>()   // these are ones we should watch
