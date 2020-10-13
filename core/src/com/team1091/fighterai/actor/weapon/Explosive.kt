@@ -30,5 +30,7 @@ class Explosive(
     override fun getVelocity(): Float = explosionRadius
 
     override fun getDuration(): Float = 1f
+    override fun getAmmo(): Int = 1
+    override fun refillAmmo() {}
 
 }

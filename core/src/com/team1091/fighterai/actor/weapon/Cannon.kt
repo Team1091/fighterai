@@ -9,7 +9,7 @@ import com.team1091.fighterai.actor.Expiration
 import com.team1091.fighterai.types.BulletType
 
 // Fires projectiles
-class Cannon(val bulletType: BulletType) : Launcher(bulletType.refireMS, bulletType.launchVelocity) {
+class Cannon(val bulletType: BulletType, maxAmmoCount: Int) : Launcher(bulletType.refireMS, bulletType.launchVelocity, maxAmmoCount) {
 
     override fun project(world: World, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float) {
         // I think we will need a sound player class, that detects the distance to each and scales the audio

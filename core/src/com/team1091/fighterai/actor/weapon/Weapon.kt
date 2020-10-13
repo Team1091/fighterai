@@ -12,4 +12,7 @@ interface Weapon {
 
     fun getVelocity(): Float
     fun getDuration(): Float
+
+    fun getAmmo(): Int
+    fun refillAmmo()
 }

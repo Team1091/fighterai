@@ -92,8 +92,8 @@ class CombatScreen(
                                 model = aircraftType.model,
                                 pilot = pilot,
                                 life = Life(aircraftType.life),
-                                primaryWeapon = Cannon(BulletType.M61_VULCAN),
-                                secondaryWeapon = MissileRack(MissileType.HYDRA),
+                                primaryWeapon = Cannon(BulletType.M61_VULCAN, 1000),
+                                secondaryWeapon = MissileRack(MissileType.AMRAAM, 2),
                                 faction = flightGroup.faction,
                                 collider = DamageCollider(4f),
                                 respawnable = true,
@@ -179,8 +179,9 @@ class CombatScreen(
         spriteBatch.begin()
         players.forEachIndexed { index, player ->
             val yRow = (index * 300f) + 300f
-            font.draw(spriteBatch, player.callsign, 0f, yRow)
-            font.draw(spriteBatch, "Vel:" + player.velocity.toInt() + " Ele:" + player.position.z.toInt(), 0f, yRow - 16)
+            font.draw(spriteBatch, player.callsign, 0f, yRow-16)
+            font.draw(spriteBatch, "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}", 0f, yRow - 32)
+            font.draw(spriteBatch, "Gun: ${player.primaryWeapon?.getAmmo()?:0}  MSL: ${player.secondaryWeapon?.getAmmo()?:0}", 0f, yRow - 48)
         }
         spriteBatch.end()
 
