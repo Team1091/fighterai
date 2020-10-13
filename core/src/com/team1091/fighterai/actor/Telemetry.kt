@@ -13,8 +13,10 @@ class Telemetry(
         val life: Float = 0f,
         val primaryWeaponVelocity: Float = 0f,
         val primaryWeaponDuration: Float = 0f,
+        val primaryWeaponAmmo: Int = 0,
         val secondaryWeaponVelocity: Float = 0f,
         val secondaryWeaponDuration: Float = 0f,
+        val secondaryWeaponAmmo: Int = 0,
         val faction: Faction = Faction.UNALIGNED,
         val radius: Float = 1f,
 )

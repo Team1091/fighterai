@@ -60,6 +60,37 @@ by adding, subtracting, and scaling vectors.
 [3Blue1Brown Vectors](https://www.youtube.com/watch?v=fNk_zzaMoSs)
 
 
+**Magnitude** 
+The length of a vector. Can be calculated with .len()
+```kotlin
+    val position = Vector3(2f, 1f, 3f)
+    val distanceFromOrigin = position.len()
+```
+
+**Distance** 
+```kotlin
+    val distanceToEnemy = us.position.dst(enemy.position)
+```
+
+**Scale** - Multiplies the vector by a number
+```kotlin
+    // get a position behind by 30 feet
+    val behind = backwards.cpy().scl(30f)
+```
+
+**Normalize** - Scale the vector to length 1.
+```
+    val vector = Vector3(2f,2f,0f)
+    vector.nor() 
+    // 0.7071f, 0.7071f, 0f
+```
+
+**Cross Product** - 
+[Cross Product](https://www.mathsisfun.com/algebra/vectors-cross-product.html)
+
+**Dot Product**
+[Dot Product](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
+
 
 ### Quaternions
 To represent rotations in 3 dimensions, we use a special type of 4 dimensional representation called a quaternion.  

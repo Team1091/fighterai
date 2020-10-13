@@ -11,9 +11,12 @@ import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Quaternion
+import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.CameraSystem
 import com.team1091.fighterai.FighterAIGame
 import com.team1091.fighterai.Mission
@@ -97,10 +100,32 @@ class CombatScreen(
                                 faction = flightGroup.faction,
                                 collider = DamageCollider(4f),
                                 respawnable = true,
-                                engine = aircraftType.engine
+                                engine = aircraftType.engine,
+                                radius = 1f
                         )
                 )
+                // cameraMan.currentTarget=world.actors.first()
             }
+
+        }
+
+        mission.structures.forEach { structure ->
+            world.actors.add(
+                    Actor(
+                            callsign = "building",
+                            position = Vector3(structure.position.x, structure.position.y, 3f),
+                            rotation = Quaternion(),
+                            velocity = 0f,
+                            faction = structure.faction,
+                            collider = DamageCollider(10f),
+                            model = modelBuilder.createBox(5f, 5f, 5f,
+                                    Material(ColorAttribute.createDiffuse(Color.ORANGE)),
+                                    com.team1091.fighterai.types.attr),
+                            life = Life(10f),
+                            engine = null,
+                            radius = 3f
+                    )
+            )
 
         }
         players.addAll(world.actors)
@@ -179,9 +204,9 @@ class CombatScreen(
         spriteBatch.begin()
         players.forEachIndexed { index, player ->
             val yRow = (index * 300f) + 300f
-            font.draw(spriteBatch, player.callsign, 0f, yRow-16)
+            font.draw(spriteBatch, player.callsign, 0f, yRow - 16)
             font.draw(spriteBatch, "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}", 0f, yRow - 32)
-            font.draw(spriteBatch, "Gun: ${player.primaryWeapon?.getAmmo()?:0}  MSL: ${player.secondaryWeapon?.getAmmo()?:0}", 0f, yRow - 48)
+            font.draw(spriteBatch, "Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", 0f, yRow - 48)
         }
         spriteBatch.end()
 

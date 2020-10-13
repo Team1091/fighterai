@@ -84,7 +84,7 @@ fun findInForwardArc(
         maxAngle: Float? = null
 ): List<Actor> {
     return world.actors.asSequence()
-            .filter { it != us && it.engine != null }
+            .filter { it != us }
             .filter {
                 maxDist == null || it.position.dst(us.position) < maxDist
             }

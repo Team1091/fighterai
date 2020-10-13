@@ -42,8 +42,10 @@ open class Actor(
                 life = life?.cur ?: 0f,
                 primaryWeaponVelocity = primaryWeapon?.getVelocity() ?: 0f,
                 primaryWeaponDuration = primaryWeapon?.getDuration() ?: 0f,
+                primaryWeaponAmmo = primaryWeapon?.getAmmo() ?: 0,
                 secondaryWeaponVelocity = secondaryWeapon?.getVelocity() ?: 0f,
                 secondaryWeaponDuration = secondaryWeapon?.getDuration() ?: 0f,
+                secondaryWeaponAmmo = secondaryWeapon?.getAmmo() ?: 0,
                 faction = faction,
                 radius = radius
         )

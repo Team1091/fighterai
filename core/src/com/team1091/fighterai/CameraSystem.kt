@@ -19,7 +19,7 @@ class CameraSystem(
 
     var currentTarget: Actor? = null
     val dolly = Dolly(
-            pos = Vector3(0f, 0f, 1f),
+            pos = Vector3(100f, 100f, 1f),
             vel = Vector3(0f, 0f, 10f)
     )
 

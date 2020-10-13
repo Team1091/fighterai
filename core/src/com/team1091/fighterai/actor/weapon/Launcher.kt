@@ -1,20 +1,18 @@
 package com.team1091.fighterai.actor.weapon
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
-import com.team1091.fighterai.types.forward
-import com.team1091.fighterai.types.left
-import com.team1091.fighterai.types.right
 
 abstract class Launcher(
         val refireMS: Long,
         val launchVelocity: Float,
         val maxAmmoCount: Int,
         val tubeOffsets: List<Vector3> = listOf(
-                right.cpy().scl(2f).add(forward),
-                left.cpy().scl(2f).add(forward),
+                Vector3(1f, 2f, 0f),
+                Vector3(-1f, 2f, 0f)
+//                right.cpy().scl(2f).add(forward),
+//                left.cpy().scl(2f).add(forward),
 //                up.cpy().scl(2f).add(forward),
 //                down.cpy().scl(2f).add(forward)
         )
@@ -41,11 +39,11 @@ abstract class Launcher(
             project(
                     world,
                     shooter,
-                    shooter.position.cpy().add(offset.cpy().mul(shooter.rotation)),
+                    shooter.position.cpy().add(offset),
                     shooter.rotation.cpy(),
                     shooter.velocity + launchVelocity
             )
-            Gdx.app.log(shooter.callsign, "Fired a missile")
+
             lastFired = millis
         }
     }

@@ -5,6 +5,7 @@ package com.team1091.fighterai
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
+import com.badlogic.gdx.math.Vector2
 import com.team1091.fighterai.actor.Faction
 import com.team1091.fighterai.actor.pilot.AiPilot
 import com.team1091.fighterai.actor.pilot.Pilot
@@ -79,7 +80,8 @@ class Mission(
         val name: String,
         val description: String,
         val place: Place,
-        val flightGroups: List<FlightGroup>
+        val flightGroups: List<FlightGroup>,
+        val structures: List<Structure> = listOf()
 )
 
 class FlightGroup(
@@ -90,30 +92,34 @@ class FlightGroup(
         val pilot: () -> Pilot
 )
 
+class Structure(
+        val faction: Faction,
+        val position: Vector2
+)
+
 val campaign = Campaign(arrayListOf(
 
-//        Mission(
-//                "Shoot some boxes",
-//                "Shoot boxes",
-//                Place.OCEAN,
-//                listOf(
-//                        FlightGroup(
-//                                pilot = { T1000AiPilot() },
-//                                faction = Faction.RED,
-//                                aircraftType = AircraftType.RAPTOR,
-//                                qty = 3,
-//                                placement = PlayerStart.EAST
-//                        ),
-//                        FlightGroup(
-//                                pilot = { AiPilot() },
-//                                faction = Faction.BLUE,
-//                                aircraftType = AircraftType.X56,
-//                                qty = 3,
-//                                placement = PlayerStart.WEST
-//                        )
-//                )
-//
-//        ),
+        Mission(
+                "Shoot some boxes",
+                "Shoot boxes",
+                Place.OCEAN,
+                listOf(
+                        FlightGroup(
+                                pilot = { AiPilot() },
+                                faction = Faction.RED,
+                                aircraftType = AircraftType.RAPTOR,
+                                qty = 1,
+                                placement = PlayerStart.EAST
+                        )
+                ),
+                listOf(
+                        Structure(Faction.BLUE, Vector2(10f, 10f)),
+                        Structure(Faction.BLUE, Vector2(10f, -10f)),
+                        Structure(Faction.BLUE, Vector2(-10f, -10f)),
+                        Structure(Faction.BLUE, Vector2(-10f, 10f)),
+                )
+
+        ),
         Mission(
                 "One v One",
                 "One vs One dogfight",

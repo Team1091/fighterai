@@ -7,6 +7,7 @@ import com.team1091.fighterai.actor.RadarContact
 import com.team1091.fighterai.actor.Telemetry
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
+import com.team1091.fighterai.types.forward
 import com.team1091.fighterai.types.up
 import kotlin.math.max
 
@@ -18,51 +19,26 @@ class AiPilot : Pilot {
     var lastTarget: RadarContact? = null
     var lastTargetTime: Long = 0
     var mode: AiState = AiState.ATTACK
+    val groundPromimityWarning = 30
+    val optimalHeight = 300
 
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
 
         // Are we diving into the ground?  Lets not.
-        if (us.position.z < 30) {
+        if (us.position.z < groundPromimityWarning) {
             // figure out how we are rotated, and which way up is.
-            val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
-            var (pitch, yaw, roll) = turnTowards(localUp)
-
-            Gdx.app.log(us.callsign, "Emergency pull up")
-            return PilotControl(
-                    pitch = pitch,
-                    yaw = yaw,
-                    roll = roll,
-                    accel = 1f,
-                    primaryWeapon = false,
-                    secondaryWeapon = false
-            )
+            return pullUp(us)
         }
 
-        val time = System.currentTimeMillis()
-        val target: RadarContact?
-
-        // find a target, close and in front of us are good ideas
-        if (lastTargetTime + 1000 < time) {
-            target = radar.contacts
-                    .filter {
-                        us.faction.isEnemy(it.faction)
-                    }
-                    .minByOrNull {
-                        it.position.dst(us.position)
-                    }
-//            if(target==null){
-//                Gdx.app.log(us.callsign, "Could not find Enemy")
-//            }
-            lastTarget = target
-            lastTargetTime = time
-        } else {
-            target = lastTarget
-        }
+        val target: RadarContact? = aquireTarget(radar, us)
 
 
         if (target == null) {
-            // if we dont have a target, get in formation?
-            return PilotControl(accel = 1f)
+
+            if (us.position.z < optimalHeight)
+                return pullUp(us)
+            else
+                return flyTowards(us, forward)// if we dont have a target, get in formation?
         }
 
         val dist = us.position.dst(target.position)
@@ -107,14 +83,14 @@ class AiPilot : Pilot {
         if (unRotatedTargetOffset.y > 0) { // They are in front of  us
 
             // if we are close enough, shoot
-            if (dist < 1000) {
+            if (us.secondaryWeaponAmmo > 0 && dist < us.secondaryWeaponDuration * us.secondaryWeaponVelocity) {
                 secondary = true
             }
 
-            if (dist < 300 && mode == AiState.ATTACK) {
+            if (dist < us.primaryWeaponDuration * us.primaryWeaponVelocity && mode == AiState.ATTACK) {
 
                 accelp = 0.25f
-                primary = true
+                primary = us.primaryWeaponAmmo > 0
 
             } else {
                 accelp = 1f
@@ -138,6 +114,62 @@ class AiPilot : Pilot {
                 secondaryWeapon = secondary
         )
 
+    }
+
+    private fun aquireTarget(radar: Radar, us: Telemetry): RadarContact? {
+        val time = System.currentTimeMillis()
+        val target: RadarContact?
+
+        // find a target, close and in front of us are good ideas
+        if (lastTargetTime + 1000 < time) {
+            target = radar.contacts
+                    .filter {
+                        us.faction.isEnemy(it.faction)
+                    }
+                    .minByOrNull {
+                        it.position.dst(us.position)
+                    }
+            //            if(target==null){
+            //                Gdx.app.log(us.callsign, "Could not find Enemy")
+            //            }
+            lastTarget = target
+            lastTargetTime = time
+        } else {
+            target = lastTarget
+        }
+        return target
+    }
+
+    private fun flyTowards(us: Telemetry, heading: Vector3): PilotControl {
+
+        val localUp = heading.cpy().mul(us.rotation.cpy().conjugate())
+        var (pitch, yaw, roll) = turnTowards(localUp)
+
+        //Gdx.app.log(us.callsign, "Emergency pull up")
+        return PilotControl(
+                pitch = pitch,
+                yaw = yaw,
+                roll = roll,
+                accel = 1f,
+                primaryWeapon = false,
+                secondaryWeapon = false
+        )
+
+    }
+
+    private fun pullUp(us: Telemetry): PilotControl {
+        val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
+        var (pitch, yaw, roll) = turnTowards(localUp)
+
+        Gdx.app.log(us.callsign, "Emergency pull up")
+        return PilotControl(
+                pitch = pitch,
+                yaw = yaw,
+                roll = roll,
+                accel = 1f,
+                primaryWeapon = false,
+                secondaryWeapon = false
+        )
     }
 
 }

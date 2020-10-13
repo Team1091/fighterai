@@ -1,5 +1,6 @@
 package com.team1091.fighterai.actor.weapon
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.World
@@ -32,6 +33,7 @@ class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
             return
         }
 
+        Gdx.app.log(shooter.callsign, "Fired a missile")
         world.audio.launch()
 
         world.newActors.add(Actor(
