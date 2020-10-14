@@ -102,7 +102,7 @@ val campaign = Campaign(arrayListOf(
         Mission(
                 "Shoot some boxes",
                 "Shoot boxes",
-                Place.OCEAN,
+                Place.DESERT,
                 listOf(
                         FlightGroup(
                                 pilot = { AiPilot() },

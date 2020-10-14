@@ -3,7 +3,8 @@ package com.team1091.fighterai.math
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
-import com.team1091.fighterai.actor.pilot.angleTo
+
+import com.team1091.fighterai.types.forward
 import kotlin.math.abs
 import kotlin.math.acos
 import kotlin.math.pow
@@ -71,9 +72,10 @@ data class StickPosition(
         var roll: Float
 )
 
-fun <T : Comparable<T>?> limit(o: T, min: T, max: T): T {
-    if (o!!.compareTo(min) < 0) return min
-    return if (o.compareTo(max) > 0) max else o
+fun <T : Comparable<T>> limit(o: T, min: T, max: T): T {
+    return if (o < min) min
+    else if (o > max) max
+    else o
 }
 
 // Used to find a target in the forward arc, closest first.
@@ -91,4 +93,17 @@ fun findInForwardArc(
             .filter {
                 maxAngle == null || us angleTo it < maxAngle
             }.toList()
+}
+
+
+
+infix fun Actor.beingAimedAtBy(target: Actor): Boolean {
+    val angle = this angleTo target
+    return angle < 0.174533f // 10 degrees
+}
+
+infix fun Actor.angleTo(target: Actor): Float {
+    val difference = position.cpy().sub(target.position)
+    val aim = forward.cpy().mul(target.rotation)
+    return angleBetween(difference, aim)
 }

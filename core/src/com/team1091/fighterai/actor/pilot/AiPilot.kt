@@ -19,18 +19,18 @@ class AiPilot : Pilot {
     var lastTarget: RadarContact? = null
     var lastTargetTime: Long = 0
     var mode: AiState = AiState.ATTACK
-    val groundPromimityWarning = 30
+    val groundProximityWarning = 30
     val optimalHeight = 300
 
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
 
         // Are we diving into the ground?  Lets not.
-        if (us.position.z < groundPromimityWarning) {
+        if (us.position.z < groundProximityWarning) {
             // figure out how we are rotated, and which way up is.
             return pullUp(us)
         }
 
-        val target: RadarContact? = aquireTarget(radar, us)
+        val target: RadarContact? = acquireTarget(radar, us)
 
 
         if (target == null) {
@@ -47,7 +47,8 @@ class AiPilot : Pilot {
         // if we are in retreat mode and too far away, switch to attack mode
         val towards = when (mode) {
             AiState.ATTACK -> {
-                if (dist < 100f) mode = AiState.RETREAT
+                if (dist < 100f)
+                    mode = AiState.RETREAT
                 1f
             }
             AiState.RETREAT -> {
@@ -74,12 +75,12 @@ class AiPilot : Pilot {
 
         val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())
 
-        var (pitchp, yawp, rollp) = turnTowards(unRotatedTargetOffset)
+        val (pitch, yaw, roll) = turnTowards(unRotatedTargetOffset)
 
 
         var primary = false
         var secondary = false
-        var accelp: Float
+        val accel: Float
         if (unRotatedTargetOffset.y > 0) { // They are in front of  us
 
             // if we are close enough, shoot
@@ -88,35 +89,29 @@ class AiPilot : Pilot {
             }
 
             if (dist < us.primaryWeaponDuration * us.primaryWeaponVelocity && mode == AiState.ATTACK) {
-
-                accelp = 0.25f
+                accel = 0.25f
                 primary = us.primaryWeaponAmmo > 0
 
             } else {
-                accelp = 1f
+                accel = 1f
             }
 
         } else {
-            accelp = 1f
-//            if (mode == AiState.ATTACK) {
-//                accelp = 1f
-//            } else { // retreat
-//                accelp = 1f
-//            }
+            accel = 1f
         }
 
         return PilotControl(
-                pitch = pitchp * towards,
-                yaw = yawp * towards,
-                roll = rollp * towards,
-                accel = accelp,
+                pitch = pitch * towards,
+                yaw = yaw * towards,
+                roll = roll * towards,
+                accel = accel,
                 primaryWeapon = primary,
                 secondaryWeapon = secondary
         )
 
     }
 
-    private fun aquireTarget(radar: Radar, us: Telemetry): RadarContact? {
+    private fun acquireTarget(radar: Radar, us: Telemetry): RadarContact? {
         val time = System.currentTimeMillis()
         val target: RadarContact?
 
@@ -129,9 +124,7 @@ class AiPilot : Pilot {
                     .minByOrNull {
                         it.position.dst(us.position)
                     }
-            //            if(target==null){
-            //                Gdx.app.log(us.callsign, "Could not find Enemy")
-            //            }
+
             lastTarget = target
             lastTargetTime = time
         } else {
@@ -143,9 +136,8 @@ class AiPilot : Pilot {
     private fun flyTowards(us: Telemetry, heading: Vector3): PilotControl {
 
         val localUp = heading.cpy().mul(us.rotation.cpy().conjugate())
-        var (pitch, yaw, roll) = turnTowards(localUp)
+        val (pitch, yaw, roll) = turnTowards(localUp)
 
-        //Gdx.app.log(us.callsign, "Emergency pull up")
         return PilotControl(
                 pitch = pitch,
                 yaw = yaw,
@@ -159,7 +151,7 @@ class AiPilot : Pilot {
 
     private fun pullUp(us: Telemetry): PilotControl {
         val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
-        var (pitch, yaw, roll) = turnTowards(localUp)
+        val (pitch, yaw, roll) = turnTowards(localUp)
 
         Gdx.app.log(us.callsign, "Emergency pull up")
         return PilotControl(

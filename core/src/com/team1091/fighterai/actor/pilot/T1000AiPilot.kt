@@ -55,7 +55,7 @@ class T1000AiPilot : Pilot {
     fun pullUp(us: Telemetry): PilotControl {
         // figure out how we are rotated, and which way up is.
         val localUp = up.cpy().mul(us.rotation.cpy().conjugate())
-        var (pitch, yaw, roll) = turnTowards(localUp)
+        val (pitch, yaw, roll) = turnTowards(localUp)
 
         Gdx.app.log(us.callsign, "Emergency pull up")
         return PilotControl(

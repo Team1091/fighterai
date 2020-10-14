@@ -44,12 +44,11 @@ class CombatScreen(
     val world = World(fighterAIGame.audio)
     val cameraMan = CameraSystem(world)
 
-    val environment: Environment
+    val environment: Environment = mission.place.environment
     val players = mutableListOf<Actor>()   // these are ones we should watch
 
     init {
         // Setup of scenario
-        environment = mission.place.environment
         mission.place.props(world)
 
         // setup ground
@@ -177,7 +176,7 @@ class CombatScreen(
             val conj = player.rotation.cpy().conjugate()
             val yRow = index * 300f
 
-            shapeRenderer.setColor(Color.ORANGE)
+            shapeRenderer.color = Color.ORANGE
             shapeRenderer.rect(0f, yRow, 200f, 200f)
             shapeRenderer.rect(200f, yRow, 200f, 200f)
 
@@ -188,7 +187,7 @@ class CombatScreen(
                     val dist = pointerToCraft.dst(0f, 0f, 0f)
                     val x = pointerToCraft.x / dist
                     val y = pointerToCraft.z / dist
-                    shapeRenderer.setColor(if (craft.faction.isEnemy(player.faction)) Color.RED else Color.GREEN)
+                    shapeRenderer.color = if (craft.faction.isEnemy(player.faction)) Color.RED else Color.GREEN
                     if (pointerToCraft.y > 0) { // forward arc
                         shapeRenderer.rect(100f + x * 100f, 100f + y * 100f + yRow, 1f, 1f)
                     } else { // rear arc

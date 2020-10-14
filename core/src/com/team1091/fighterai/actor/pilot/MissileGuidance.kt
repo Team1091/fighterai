@@ -24,7 +24,7 @@ class MissileGuidance(val target: Actor) : Pilot {
 
         val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())
 
-        var (pitch, yaw, roll) = turnTowards(unRotatedTargetOffset)
+        val (pitch, yaw, roll) = turnTowards(unRotatedTargetOffset)
 
         return PilotControl(
                 pitch = pitch,

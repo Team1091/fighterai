@@ -8,7 +8,7 @@ package com.team1091.fighterai.math;
  * - New lattice-symmetric gradient sets
  * - Optional alternate lattice orientation evaluators
  *
- * This implementation has been updated to slightly improve its output, but it is recommented to first
+ * This implementation has been updated to slightly improve its output, but it is recommended to first
  * try the newer OpenSimplex2S or OpenSimplex2F noise. These are located in the OpenSimplex2 repo:
  * https://github.com/KdotJPG/OpenSimplex2
  *
@@ -33,10 +33,10 @@ public class OpenSimplexNoise {
     private static final int PSIZE = 2048;
     private static final int PMASK = 2047;
 
-    private short[] perm;
-    private Grad2[] permGrad2;
-    private Grad3[] permGrad3;
-    private Grad4[] permGrad4;
+    private final short[] perm;
+    private final Grad2[] permGrad2;
+    private final Grad3[] permGrad3;
+    private final Grad4[] permGrad4;
 
     public OpenSimplexNoise() {
         this(DEFAULT_SEED);

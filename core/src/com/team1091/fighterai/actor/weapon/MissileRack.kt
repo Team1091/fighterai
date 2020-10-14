@@ -9,7 +9,7 @@ import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Expiration
 import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.pilot.MissileGuidance
-import com.team1091.fighterai.actor.pilot.beingAimedAtBy
+import com.team1091.fighterai.math.beingAimedAtBy
 import com.team1091.fighterai.types.MissileType
 
 // Fires homing ordinance
@@ -43,7 +43,6 @@ class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
                 velocity = velocity,
                 model = missileType.model,
                 pilot = MissileGuidance(target),
-
                 life = Life(1f),
                 expiration = Expiration(missileType.expiration),
                 radius = missileType.radius,

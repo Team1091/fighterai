@@ -20,14 +20,14 @@ class MissionSelectScreen(val flightAIGame: FighterAIGame) : Screen {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             val mission = campaign.missions.first()
-            flightAIGame.screen = CombatScreen(flightAIGame, mission);
+            flightAIGame.screen = CombatScreen(flightAIGame, mission)
         }
 
         spriteBatch.begin()
         campaign.missions.forEachIndexed { index, mission ->
             //This will cause issues if there are more than 10
             if (Gdx.input.isKeyPressed(Input.Keys.NUM_0 + index)) {
-                flightAIGame.screen = CombatScreen(flightAIGame, mission);
+                flightAIGame.screen = CombatScreen(flightAIGame, mission)
             }
 
             font.draw(spriteBatch, index.toString() + " - " + mission.name + " " + mission.description, 100f, Gdx.graphics.height - (20f * (index + 1)))

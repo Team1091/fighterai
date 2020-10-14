@@ -12,7 +12,7 @@ class BattleSummaryScreen(val fighterAIGame: FighterAIGame) : Screen {
             Gdx.app.exit()
         }
 
-        fighterAIGame.screen = MissionSelectScreen(fighterAIGame);
+        fighterAIGame.screen = MissionSelectScreen(fighterAIGame)
     }
 
     override fun resize(width: Int, height: Int) {}

@@ -9,10 +9,9 @@ import com.team1091.fighterai.types.up
 class CameraSystem(
         val world: World
 ) {
-    val cam: PerspectiveCamera
+    val cam: PerspectiveCamera = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
 
     init {
-        cam = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         cam.near = 1f
         cam.far = 10000f
     }

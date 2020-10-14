@@ -13,7 +13,7 @@ import com.team1091.fighterai.types.up
 import java.util.*
 import kotlin.math.pow
 
-val gravity = -10f
+const val gravity = -10f
 
 class World(val audio: IAudioManager) {
     val actors = mutableListOf<Actor>()
@@ -115,11 +115,11 @@ class World(val audio: IAudioManager) {
     }
 
     fun removeActor(worldId: UUID) {
-        var actor = actors.filter { it.worldId == worldId }.firstOrNull()
+        val actor = actors.firstOrNull { it.worldId == worldId }
         if (actor == null) {
-            return;
+            return
         }
 
-        removeActors.add(actor);
+        removeActors.add(actor)
     }
 }
