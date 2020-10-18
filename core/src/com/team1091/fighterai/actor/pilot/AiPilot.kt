@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.RadarContact
 import com.team1091.fighterai.actor.Telemetry
+import com.team1091.fighterai.math.angleBetween
 import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
 import com.team1091.fighterai.types.forward
@@ -75,6 +76,11 @@ class AiPilot : Pilot {
 
         val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())
 
+        val angle = angleBetween(forward, unRotatedTargetOffset)
+        val power = if (angle < 0.3) {
+            angle * (1f / 0.3f)
+        } else 1f
+
         val (pitch, yaw, roll) = turnTowards(unRotatedTargetOffset)
 
 
@@ -101,9 +107,9 @@ class AiPilot : Pilot {
         }
 
         return PilotControl(
-                pitch = pitch * towards,
-                yaw = yaw * towards,
-                roll = roll * towards,
+                pitch = pitch * towards * power,
+                yaw = yaw * towards * power,
+                roll = roll * towards * power,
                 accel = accel,
                 primaryWeapon = primary,
                 secondaryWeapon = secondary

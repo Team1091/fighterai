@@ -23,7 +23,8 @@ class Cannon(val bulletType: BulletType, maxAmmoCount: Int) : Launcher(bulletTyp
                 expiration = Expiration(bulletType.expiration),
                 radius = bulletType.radius,
                 collider = DamageAndDisappearCollider(bulletType.damage),
-                engine = null
+                engine = null,
+                friction = 0.2f
         ))
     }
 

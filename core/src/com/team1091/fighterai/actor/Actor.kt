@@ -23,7 +23,8 @@ open class Actor(
         val radius: Float = 1f,
         val collider: Collider?,
         val respawnable: Boolean = false,
-        val engine: Engine?
+        val engine: Engine?,
+        val friction: Float = 0.6f
 ) {
     val instance = ModelInstance(model)
     val worldId = randomUUID()

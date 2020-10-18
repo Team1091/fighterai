@@ -54,7 +54,7 @@ class World(val audio: IAudioManager) {
             }
 
             with(craft) {
-                velocity *= 1f - (0.8f * dt) // Slow down, air resistance?
+                velocity *= 1f - (craft.friction * dt) // Slow down, air resistance?
 
                 position.add(Vector3(0f, velocity * dt, 0f).mul(rotation))
                 instance.transform.setToTranslation(position).rotate(rotation)

@@ -101,7 +101,7 @@ val campaign = Campaign(arrayListOf(
 
         Mission(
                 "Shoot some boxes",
-                "Shoot boxes",
+                "Attack and destroy boxes on the ground.  It's important to line up shots, and not crash.",
                 Place.DESERT,
                 listOf(
                         FlightGroup(
@@ -122,7 +122,7 @@ val campaign = Campaign(arrayListOf(
         ),
         Mission(
                 "One v One",
-                "One vs One dogfight",
+                "Dogfight, don't hit the ground, and don't get shot",
                 Place.DESERT,
                 listOf(
                         FlightGroup(
@@ -135,7 +135,7 @@ val campaign = Campaign(arrayListOf(
                         FlightGroup(
                                 pilot = { AiPilot() },
                                 faction = Faction.BLUE,
-                                aircraftType = AircraftType.X56,
+                                aircraftType = AircraftType.RAPTOR,
                                 qty = 1,
                                 placement = PlayerStart.WEST
                         )
@@ -144,7 +144,7 @@ val campaign = Campaign(arrayListOf(
         ),
         Mission(
                 "3v3",
-                "Ocean showdown",
+                "Ocean showdown, you will need to make sure you don't run into your allies.",
                 Place.OCEAN,
                 listOf(
                         FlightGroup(
@@ -157,7 +157,7 @@ val campaign = Campaign(arrayListOf(
                         FlightGroup(
                                 pilot = { AiPilot() },
                                 faction = Faction.BLUE,
-                                aircraftType = AircraftType.X56,
+                                aircraftType = AircraftType.RAPTOR,
                                 qty = 3,
                                 placement = PlayerStart.WEST
                         )

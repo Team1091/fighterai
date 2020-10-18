@@ -23,6 +23,7 @@ import com.team1091.fighterai.Mission
 import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.DamageCollider
+import com.team1091.fighterai.actor.Faction
 import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.weapon.Cannon
 import com.team1091.fighterai.actor.weapon.MissileRack
@@ -95,19 +96,21 @@ class CombatScreen(
                                 pilot = pilot,
                                 life = Life(aircraftType.life),
                                 primaryWeapon = Cannon(BulletType.M61_VULCAN, 1000),
-                                secondaryWeapon = MissileRack(MissileType.AMRAAM, 2),
+                                secondaryWeapon = MissileRack(MissileType.AMRAAM, 4),
                                 faction = flightGroup.faction,
+                                radius = 1f,
                                 collider = DamageCollider(4f),
                                 respawnable = true,
                                 engine = aircraftType.engine,
-                                radius = 1f
+                                friction = 0.6f
                         )
                 )
-                // cameraMan.currentTarget=world.actors.first()
+                cameraMan.currentTarget=world.actors.first()
             }
 
         }
 
+        // Add buildings
         mission.structures.forEach { structure ->
             world.actors.add(
                     Actor(
@@ -115,14 +118,14 @@ class CombatScreen(
                             position = Vector3(structure.position.x, structure.position.y, 3f),
                             rotation = Quaternion(),
                             velocity = 0f,
-                            faction = structure.faction,
-                            collider = DamageCollider(10f),
                             model = modelBuilder.createBox(5f, 5f, 5f,
                                     Material(ColorAttribute.createDiffuse(Color.ORANGE)),
                                     com.team1091.fighterai.types.attr),
                             life = Life(10f),
-                            engine = null,
-                            radius = 3f
+                            faction = structure.faction,
+                            radius = 3f,
+                            collider = DamageCollider(10f),
+                            engine = null
                     )
             )
 
@@ -171,14 +174,21 @@ class CombatScreen(
 
         // Draw HUD
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-        players.forEachIndexed { index, player ->
+
+        var red = 1
+        var blue = 1
+        players.forEach { player ->
 
             val conj = player.rotation.cpy().conjugate()
-            val yRow = index * 300f
+            val (xOffset, yRow) = if (player.faction == Faction.RED) {
+                Pair(0f, red++ * 300f)
+            } else {
+                Pair(Gdx.graphics.width - 400f, blue++ * 300f)
+            }
 
             shapeRenderer.color = Color.ORANGE
-            shapeRenderer.rect(0f, yRow, 200f, 200f)
-            shapeRenderer.rect(200f, yRow, 200f, 200f)
+            shapeRenderer.rect(xOffset, yRow, 200f, 200f)
+            shapeRenderer.rect(xOffset + 200f, yRow, 200f, 200f)
 
 //                shapeRenderer.rect
             for (craft in world.actors) {
@@ -189,9 +199,9 @@ class CombatScreen(
                     val y = pointerToCraft.z / dist
                     shapeRenderer.color = if (craft.faction.isEnemy(player.faction)) Color.RED else Color.GREEN
                     if (pointerToCraft.y > 0) { // forward arc
-                        shapeRenderer.rect(100f + x * 100f, 100f + y * 100f + yRow, 1f, 1f)
+                        shapeRenderer.rect(xOffset + 100f + x * 100f, 100f + y * 100f + yRow, 1f, 1f)
                     } else { // rear arc
-                        shapeRenderer.rect(300f - x * 100f, 100f - y * 100f + yRow, 1f, 1f)
+                        shapeRenderer.rect(xOffset + 300f - x * 100f, 100f - y * 100f + yRow, 1f, 1f)
                     }
 
                 }
@@ -200,12 +210,19 @@ class CombatScreen(
         }
         shapeRenderer.end()
 
+        red = 1
+        blue = 1
         spriteBatch.begin()
-        players.forEachIndexed { index, player ->
-            val yRow = (index * 300f) + 300f
-            font.draw(spriteBatch, player.callsign, 0f, yRow - 16)
-            font.draw(spriteBatch, "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}", 0f, yRow - 32)
-            font.draw(spriteBatch, "Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", 0f, yRow - 48)
+        players.forEach { player ->
+            val (xOffset, yRow) = if (player.faction == Faction.RED) {
+                Pair(0f, red++ * 300f)
+            } else {
+                Pair(Gdx.graphics.width - 400f, blue++ * 300f)
+            }
+
+            font.draw(spriteBatch, player.callsign, xOffset, yRow - 16)
+            font.draw(spriteBatch, "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}", xOffset, yRow - 32)
+            font.draw(spriteBatch, "Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", xOffset, yRow - 48)
         }
         spriteBatch.end()
 
