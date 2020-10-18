@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2
 import com.team1091.fighterai.actor.Faction
 import com.team1091.fighterai.actor.pilot.AiPilot
 import com.team1091.fighterai.actor.pilot.Pilot
+import com.team1091.fighterai.actor.pilot.SampleJavaPilot
 import com.team1091.fighterai.actor.pilot.T1000AiPilot
 import com.team1091.fighterai.types.AircraftType
 
@@ -27,38 +28,7 @@ enum class Place(
                 environment
             },
             groundTexture = "Tirari_Desert_-_NASA_-_satellite_2006_square.jpg",
-            props = {
-
-                // This is for additional things, like buildings
-
-
-//                val containerModel = modelBuilder.createBox(size, size, size,
-//                        Material(ColorAttribute.createDiffuse(Color.GRAY)),
-//                        attr)
-//
-//                for (x in 0..5) {
-//                    for (y in 0..5) {
-//                        for (z in 0..5) {
-//                            val pos = Vector3(
-//                                    x.toFloat() * 40f - (3 * 40),
-//                                    y.toFloat() * 40f - (3 * 40),
-//                                    z.toFloat() * 40f - (3 * 40)
-//                            )
-//
-//                            it.actors.add(Actor(
-//                                    pos,
-//                                    Quaternion(),
-//                                    0f,
-//                                    containerModel,
-//                                    pilot = DriftPilot(),
-//                                    radius = size,
-//                                    collider = DamageCollider(100f)
-//                            ))
-//                        }
-//                    }
-//                }
-
-            }
+            props = {}
     ),
     OCEAN(
             {
@@ -126,14 +96,14 @@ val campaign = Campaign(arrayListOf(
                 Place.DESERT,
                 listOf(
                         FlightGroup(
-                                pilot = { T1000AiPilot() },
+                                pilot = { AiPilot() },
                                 faction = Faction.RED,
                                 aircraftType = AircraftType.RAPTOR,
                                 qty = 1,
                                 placement = PlayerStart.EAST
                         ),
                         FlightGroup(
-                                pilot = { AiPilot() },
+                                pilot = { SampleJavaPilot() },
                                 faction = Faction.BLUE,
                                 aircraftType = AircraftType.RAPTOR,
                                 qty = 1,

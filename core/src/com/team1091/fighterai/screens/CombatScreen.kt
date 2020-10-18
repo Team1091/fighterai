@@ -100,12 +100,13 @@ class CombatScreen(
                                 faction = flightGroup.faction,
                                 radius = 1f,
                                 collider = DamageCollider(4f),
-                                respawnable = true,
+                                respawns = 1,
                                 engine = aircraftType.engine,
                                 friction = 0.6f
                         )
                 )
-                cameraMan.currentTarget=world.actors.first()
+                // Commenting this line in will give you a camera behind the first actor
+                // cameraMan.currentTarget = world.actors.first()
             }
 
         }

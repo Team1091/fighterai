@@ -107,6 +107,10 @@ class World(val audio: IAudioManager) {
                     it.life.cur = it.life.max
                 }
 
+                it.primaryWeapon?.refillAmmo()
+                it.secondaryWeapon?.refillAmmo()
+
+                it.respawns--
 
                 actors.add(it)
             }

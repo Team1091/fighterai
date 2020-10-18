@@ -22,7 +22,7 @@ open class Actor(
         val expiration: Expiration? = null,
         val radius: Float = 1f,
         val collider: Collider?,
-        val respawnable: Boolean = false,
+        var respawns: Int = 0,
         val engine: Engine?,
         val friction: Float = 0.6f
 ) {

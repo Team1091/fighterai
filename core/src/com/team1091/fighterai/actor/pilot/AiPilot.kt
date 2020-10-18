@@ -1,6 +1,7 @@
 package com.team1091.fighterai.actor.pilot
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.MathUtils.degreesToRadians
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.RadarContact
@@ -10,7 +11,6 @@ import com.team1091.fighterai.math.leadTarget
 import com.team1091.fighterai.math.turnTowards
 import com.team1091.fighterai.types.forward
 import com.team1091.fighterai.types.up
-import kotlin.math.max
 
 /*
  This is an example ai pilot
@@ -20,7 +20,7 @@ class AiPilot : Pilot {
     var lastTarget: RadarContact? = null
     var lastTargetTime: Long = 0
     var mode: AiState = AiState.ATTACK
-    val groundProximityWarning = 30
+    val groundProximityWarning = 100
     val optimalHeight = 300
 
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
@@ -33,8 +33,8 @@ class AiPilot : Pilot {
 
         val target: RadarContact? = acquireTarget(radar, us)
 
-
         if (target == null) {
+            // There are no targets around, get above optimal height
 
             if (us.position.z < optimalHeight)
                 return pullUp(us)
@@ -55,10 +55,6 @@ class AiPilot : Pilot {
             AiState.RETREAT -> {
                 if (dist > 300f)
                     mode = AiState.ATTACK
-
-//                    else if (us beingAimedAtBy target)
-//                        mode = AiState.EVADE
-
                 -1f
             }
             AiState.EVADE -> {
@@ -71,7 +67,7 @@ class AiPilot : Pilot {
                 us.position,
                 target.position,
                 Vector3(0f, target.velocity, 0f).mul(target.rotation),
-                max(us.velocity, us.primaryWeaponVelocity)
+                us.velocity + us.primaryWeaponVelocity
         )
 
         val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())
@@ -90,7 +86,7 @@ class AiPilot : Pilot {
         if (unRotatedTargetOffset.y > 0) { // They are in front of  us
 
             // if we are close enough, shoot
-            if (us.secondaryWeaponAmmo > 0 && dist < us.secondaryWeaponDuration * us.secondaryWeaponVelocity) {
+            if (us.secondaryWeaponAmmo > 0 && angle < 10 * degreesToRadians && dist < us.secondaryWeaponDuration * us.secondaryWeaponVelocity) {
                 secondary = true
             }
 

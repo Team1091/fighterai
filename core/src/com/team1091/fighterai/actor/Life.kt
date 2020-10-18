@@ -22,7 +22,7 @@ class Life(val max: Float, var cur: Float = max) {
         // TODO: sound
         //world.audio.explode()
         world.removeActors.add(actor)
-        if (actor.respawnable) {
+        if (actor.respawns > 0) {
             world.respawnActors.add(actor)
         }
         Gdx.app.log(actor.callsign, "Exploded")

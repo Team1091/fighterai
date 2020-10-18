@@ -32,11 +32,11 @@ public class SampleJavaPilot implements Pilot {
             );
         }
 
-        // Just do corkscrews, yay
+        // Just do loops.  It makes us harder to hit
         return new PilotControl(
                 1,
-                1,
-                1,
+                0,
+                0,
                 1f,
                 false,
                 false
