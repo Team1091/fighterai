@@ -181,15 +181,15 @@ class CombatScreen(
         players.forEach { player ->
 
             val conj = player.rotation.cpy().conjugate()
-            val (xOffset, yRow) = if (player.faction == Faction.RED) {
+            val (xOffset, yOffset) = if (player.faction == Faction.RED) {
                 Pair(0f, red++ * 300f)
             } else {
                 Pair(Gdx.graphics.width - 400f, blue++ * 300f)
             }
 
             shapeRenderer.color = Color.ORANGE
-            shapeRenderer.rect(xOffset, yRow, 200f, 200f)
-            shapeRenderer.rect(xOffset + 200f, yRow, 200f, 200f)
+            shapeRenderer.rect(xOffset, yOffset, 200f, 200f)
+            shapeRenderer.rect(xOffset + 200f, yOffset, 200f, 200f)
 
 //                shapeRenderer.rect
             for (craft in world.actors) {
@@ -200,9 +200,9 @@ class CombatScreen(
                     val y = pointerToCraft.z / dist
                     shapeRenderer.color = if (craft.faction.isEnemy(player.faction)) Color.RED else Color.GREEN
                     if (pointerToCraft.y > 0) { // forward arc
-                        shapeRenderer.rect(xOffset + 100f + x * 100f, 100f + y * 100f + yRow, 1f, 1f)
+                        shapeRenderer.rect(xOffset + 100f + x * 100f, 100f + y * 100f + yOffset, 1f, 1f)
                     } else { // rear arc
-                        shapeRenderer.rect(xOffset + 300f - x * 100f, 100f - y * 100f + yRow, 1f, 1f)
+                        shapeRenderer.rect(xOffset + 300f - x * 100f, 100f - y * 100f + yOffset, 1f, 1f)
                     }
 
                 }
@@ -215,15 +215,15 @@ class CombatScreen(
         blue = 1
         spriteBatch.begin()
         players.forEach { player ->
-            val (xOffset, yRow) = if (player.faction == Faction.RED) {
+            val (xOffset, yOffset) = if (player.faction == Faction.RED) {
                 Pair(0f, red++ * 300f)
             } else {
                 Pair(Gdx.graphics.width - 400f, blue++ * 300f)
             }
 
-            font.draw(spriteBatch, player.callsign, xOffset, yRow - 16)
-            font.draw(spriteBatch, "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}", xOffset, yRow - 32)
-            font.draw(spriteBatch, "Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", xOffset, yRow - 48)
+            font.draw(spriteBatch, player.callsign, xOffset, yOffset - 16)
+            font.draw(spriteBatch, "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}", xOffset, yOffset - 32)
+            font.draw(spriteBatch, "HP: ${player.life?.cur?:0} Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", xOffset, yOffset - 48)
         }
         spriteBatch.end()
 
