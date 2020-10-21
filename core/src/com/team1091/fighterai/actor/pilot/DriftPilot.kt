@@ -6,6 +6,8 @@ import java.util.*
 
 // This is just a pilot that's out of control
 class DriftPilot : Pilot {
+
+    // When we make a new one, we choose a random position for our sticks to be in, then just always return that.
     val control = PilotControl(
             pitch = Random().nextFloat(),
             yaw = Random().nextFloat(),

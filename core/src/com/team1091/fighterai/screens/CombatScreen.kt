@@ -30,6 +30,7 @@ import com.team1091.fighterai.actor.weapon.MissileRack
 import com.team1091.fighterai.types.BulletType
 import com.team1091.fighterai.types.MissileType
 import com.team1091.fighterai.types.up
+import java.lang.Float.min
 
 class CombatScreen(
         val fighterAIGame: FighterAIGame,
@@ -150,8 +151,9 @@ class CombatScreen(
         val dt = Gdx.graphics.deltaTime
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
-
-        world.simulate(dt)
+        // This makes sure that the simulation is at least called 10 times a second on slower hardware
+        // If the hardware is too slow, the timestamp grows and bullets may phase through the opponent
+        world.simulate(min(dt, 0.1f))
 
 
         // Render
