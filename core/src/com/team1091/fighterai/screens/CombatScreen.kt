@@ -17,10 +17,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.CameraSystem
-import com.team1091.fighterai.FighterAIGame
-import com.team1091.fighterai.Mission
-import com.team1091.fighterai.World
+import com.team1091.fighterai.*
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Faction
@@ -106,8 +103,9 @@ class CombatScreen(
                                 friction = 0.6f
                         )
                 )
-                // Commenting this line in will give you a camera behind the first actor
-                // cameraMan.currentTarget = world.actors.first()
+
+                if (chaseCamera)
+                    cameraMan.currentTarget = world.actors.first()
             }
 
         }

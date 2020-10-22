@@ -74,7 +74,7 @@ class YourNamePilot : Pilot {
 }
 ```
 
-Then change the line in PlayerShip.kt to have your pilot instead of the sample one
+Then change the line in Config.kt to have your pilot instead of the sample one
 ```kotlin
 val buildPlayerShip = { SampleKotlinPilot() }
 ```

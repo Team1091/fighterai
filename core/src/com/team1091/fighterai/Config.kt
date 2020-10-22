@@ -8,3 +8,5 @@ val buildPlayerShip = { SampleKotlinPilot() }
 
 // This constructs an opposition ai.  Right now it uses your own, but we can set it to vs others later in the dev process
 val buildAdversarialShip = buildPlayerShip
+
+val chaseCamera = false
