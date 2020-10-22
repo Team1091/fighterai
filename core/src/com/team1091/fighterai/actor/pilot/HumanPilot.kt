@@ -9,6 +9,7 @@ import com.team1091.fighterai.math.deaden
 
 // Pilot with an old XBOX controller
 class HumanPilot(val controller: Controller) : Pilot {
+
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
 
         return PilotControl(

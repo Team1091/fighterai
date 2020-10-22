@@ -96,7 +96,6 @@ fun findInForwardArc(
 }
 
 
-
 infix fun Actor.beingAimedAtBy(target: Actor): Boolean {
     val angle = this angleTo target
     return angle < 0.174533f // 10 degrees

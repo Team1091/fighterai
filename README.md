@@ -60,3 +60,21 @@ interface Pilot {
     fun fly(us: Telemetry, radar: Radar): PilotControl
 }
 ```
+
+To use it, we need to implement it.  Make a new class in com/team1091/fighterai/actor/pilot
+
+```kotlin
+class YourNamePilot : Pilot {
+
+    override fun fly(us: Telemetry, radar: Radar): PilotControl {
+
+        // This just flies forward
+        return PilotControl()
+    }
+}
+```
+
+Then change the line in PlayerShip.kt to have your pilot instead of the sample one
+```kotlin
+val buildPlayerShip = { SampleKotlinPilot() }
+```

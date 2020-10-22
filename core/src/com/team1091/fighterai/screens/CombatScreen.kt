@@ -144,16 +144,17 @@ class CombatScreen(
 
 
     override fun render(delta: Float) {
+        val dt = min(delta, 0.1f)
+
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit()
         }
 
-        val dt = Gdx.graphics.deltaTime
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
         // This makes sure that the simulation is at least called 10 times a second on slower hardware
         // If the hardware is too slow, the timestamp grows and bullets may phase through the opponent
-        world.simulate(min(dt, 0.1f))
+        world.simulate(dt)
 
 
         // Render
@@ -163,7 +164,7 @@ class CombatScreen(
         Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1f)
 
         // Camera Stuff
-        cameraMan.look(delta)
+        cameraMan.look(dt)
 
         // Render Models
         modelBatch.begin(cameraMan.cam)
@@ -225,7 +226,7 @@ class CombatScreen(
 
             font.draw(spriteBatch, player.callsign, xOffset, yOffset - 16)
             font.draw(spriteBatch, "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}", xOffset, yOffset - 32)
-            font.draw(spriteBatch, "HP: ${player.life?.cur?:0} Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", xOffset, yOffset - 48)
+            font.draw(spriteBatch, "HP: ${player.life?.cur ?: 0} Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", xOffset, yOffset - 48)
         }
         spriteBatch.end()
 

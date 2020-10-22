@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector2
 import com.team1091.fighterai.actor.Faction
-import com.team1091.fighterai.actor.pilot.AiPilot
 import com.team1091.fighterai.actor.pilot.Pilot
-import com.team1091.fighterai.actor.pilot.SampleJavaPilot
-import com.team1091.fighterai.actor.pilot.T1000AiPilot
 import com.team1091.fighterai.types.AircraftType
 
 enum class Place(
@@ -75,7 +72,7 @@ val campaign = Campaign(arrayListOf(
                 Place.DESERT,
                 listOf(
                         FlightGroup(
-                                pilot = { AiPilot() },
+                                pilot = buildPlayerShip,
                                 faction = Faction.RED,
                                 aircraftType = AircraftType.RAPTOR,
                                 qty = 1,
@@ -96,14 +93,14 @@ val campaign = Campaign(arrayListOf(
                 Place.DESERT,
                 listOf(
                         FlightGroup(
-                                pilot = { AiPilot() },
+                                pilot = buildPlayerShip,
                                 faction = Faction.RED,
                                 aircraftType = AircraftType.RAPTOR,
                                 qty = 1,
                                 placement = PlayerStart.EAST
                         ),
                         FlightGroup(
-                                pilot = { SampleJavaPilot() },
+                                pilot = buildAdversarialShip,
                                 faction = Faction.BLUE,
                                 aircraftType = AircraftType.RAPTOR,
                                 qty = 1,
@@ -118,20 +115,19 @@ val campaign = Campaign(arrayListOf(
                 Place.OCEAN,
                 listOf(
                         FlightGroup(
-                                pilot = { T1000AiPilot() },
+                                pilot = buildPlayerShip,
                                 faction = Faction.RED,
                                 aircraftType = AircraftType.RAPTOR,
                                 qty = 3,
                                 placement = PlayerStart.EAST
                         ),
                         FlightGroup(
-                                pilot = { AiPilot() },
+                                pilot = buildAdversarialShip,
                                 faction = Faction.BLUE,
                                 aircraftType = AircraftType.RAPTOR,
                                 qty = 3,
                                 placement = PlayerStart.WEST
                         )
                 )
-
         )
 ))
