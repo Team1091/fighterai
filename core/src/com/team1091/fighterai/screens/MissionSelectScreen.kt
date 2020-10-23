@@ -3,6 +3,7 @@ package com.team1091.fighterai.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.team1091.fighterai.FighterAIGame
 import com.team1091.fighterai.campaign
 
@@ -10,6 +11,8 @@ import com.team1091.fighterai.campaign
  * This allows us to select a mission to run
  */
 class MissionSelectScreen(val flightAIGame: FighterAIGame) : Screen {
+
+    val cam = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
 
     val spriteBatch = flightAIGame.spriteBatch
     val font = flightAIGame.font
@@ -23,6 +26,8 @@ class MissionSelectScreen(val flightAIGame: FighterAIGame) : Screen {
             flightAIGame.screen = CombatScreen(flightAIGame, mission)
         }
 
+        cam.update()
+        spriteBatch.projectionMatrix = cam.combined
         spriteBatch.begin()
         font.draw(spriteBatch, "Select a mission by pressing its number on your keyboard", 100f, Gdx.graphics.height - 20f)
         campaign.missions.forEachIndexed { index, mission ->
@@ -48,6 +53,7 @@ class MissionSelectScreen(val flightAIGame: FighterAIGame) : Screen {
     }
 
     override fun resize(width: Int, height: Int) {
+        cam.setToOrtho(false, width.toFloat(), height.toFloat())
     }
 
     override fun pause() {

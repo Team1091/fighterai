@@ -3,10 +3,7 @@ package com.team1091.fighterai.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.VertexAttributes
+import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelBatch
@@ -42,6 +39,7 @@ class CombatScreen(
 
     val world = World(fighterAIGame.audio)
     val cameraMan = CameraSystem(world)
+    val hudCam = OrthographicCamera(1920f, 1080f)
 
     val environment: Environment = mission.place.environment
     val players = mutableListOf<Actor>()   // these are ones we should watch
@@ -140,7 +138,6 @@ class CombatScreen(
 
     }
 
-
     override fun render(delta: Float) {
         val dt = min(delta, 0.1f)
 
@@ -148,17 +145,22 @@ class CombatScreen(
             Gdx.app.exit()
         }
 
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
-
         // This makes sure that the simulation is at least called 10 times a second on slower hardware
         // If the hardware is too slow, the timestamp grows and bullets may phase through the opponent
         world.simulate(dt)
 
+        renderWorld(dt)
 
-        // Render
-        val width: Int = Gdx.graphics.width
-        val height: Int = Gdx.graphics.height
-        Gdx.gl.glViewport(0, 0, width, height)
+        if (showHud) {
+            drawHud()
+        }
+
+    }
+
+    private fun renderWorld(dt: Float) {
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.width, Gdx.graphics.height)
         Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1f)
 
         // Camera Stuff
@@ -173,8 +175,12 @@ class CombatScreen(
             modelBatch.render(craft.instance, environment)
         }
         modelBatch.end()
+    }
 
-        // Draw HUD
+    private fun drawHud() {
+
+        hudCam.update()
+        shapeRenderer.projectionMatrix = hudCam.combined
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
 
         var red = 1
@@ -185,14 +191,14 @@ class CombatScreen(
             val (xOffset, yOffset) = if (player.faction == Faction.RED) {
                 Pair(0f, red++ * 300f)
             } else {
-                Pair(Gdx.graphics.width - 400f, blue++ * 300f)
+                Pair(hudCam.viewportWidth - 400f, blue++ * 300f)
             }
 
             shapeRenderer.color = Color.ORANGE
             shapeRenderer.rect(xOffset, yOffset, 200f, 200f)
             shapeRenderer.rect(xOffset + 200f, yOffset, 200f, 200f)
 
-//                shapeRenderer.rect
+            //                shapeRenderer.rect
             for (craft in world.actors) {
                 if (craft.engine != null && craft != player) {
                     val pointerToCraft = craft.position.cpy().sub(player.position).mul(conj)
@@ -214,12 +220,13 @@ class CombatScreen(
 
         red = 1
         blue = 1
+        spriteBatch.projectionMatrix = hudCam.combined
         spriteBatch.begin()
         players.forEach { player ->
             val (xOffset, yOffset) = if (player.faction == Faction.RED) {
                 Pair(0f, red++ * 300f)
             } else {
-                Pair(Gdx.graphics.width - 400f, blue++ * 300f)
+                Pair(hudCam.viewportWidth - 400f, blue++ * 300f)
             }
 
             font.draw(spriteBatch, player.callsign, xOffset, yOffset - 16)
@@ -227,7 +234,6 @@ class CombatScreen(
             font.draw(spriteBatch, "HP: ${player.life?.cur ?: 0} Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", xOffset, yOffset - 48)
         }
         spriteBatch.end()
-
     }
 
     override fun show() {
@@ -235,7 +241,8 @@ class CombatScreen(
     }
 
     override fun resize(width: Int, height: Int) {
-
+        cameraMan.resize(width, height)
+        hudCam.setToOrtho(false, width.toFloat(), height.toFloat())
     }
 
     override fun pause() {

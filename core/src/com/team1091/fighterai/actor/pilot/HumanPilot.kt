@@ -20,6 +20,5 @@ class HumanPilot(val controller: Controller) : Pilot {
                 primaryWeapon = controller.getButton(Xbox.R_BUMPER),
                 secondaryWeapon = controller.getButton(Xbox.L_BUMPER)
         )
-
     }
 }

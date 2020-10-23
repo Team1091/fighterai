@@ -73,6 +73,11 @@ class CameraSystem(
         cam.update()
     }
 
+    fun resize(width: Int, height: Int) {
+        cam.viewportHeight = height.toFloat()
+        cam.viewportWidth = width.toFloat()
+    }
+
     class Dolly(val pos: Vector3, val vel: Vector3)
 
     // TODO: black bars - titles
