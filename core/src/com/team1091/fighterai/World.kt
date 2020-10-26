@@ -39,7 +39,7 @@ class World(val audio: IAudioManager) {
                     craft.rotation.nor()
 
                     val forwardVec = forward.cpy().mul(craft.rotation)
-                    craft.velocity += (pilotControl.accel * engine.maxAccel + forwardVec.z * gravity) * dt // Speed up
+                    craft.velocity += (pilotControl.throttle * engine.maxAccel + forwardVec.z * gravity) * dt // Speed up
                 }
 
                 // if primary shoot

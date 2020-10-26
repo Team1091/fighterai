@@ -29,7 +29,7 @@ class MissileGuidance(val target: Actor) : Pilot {
         return PilotControl(
                 pitch = pitch,
                 yaw = yaw,
-                accel = if (unRotatedTargetOffset.y > 0) 1f else 0.25f,
+                throttle = if (unRotatedTargetOffset.y > 0) 1f else 0.25f,
                 // if we are close enough, detonate. velocity takes the place of range here
                 secondaryWeapon = target.position.dst(us.position) < us.secondaryWeaponVelocity
         )

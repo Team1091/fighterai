@@ -13,7 +13,7 @@ class HumanPilot(val controller: Controller) : Pilot {
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
 
         return PilotControl(
-                accel = accel(-controller.getAxis(Xbox.L_STICK_VERTICAL_AXIS)),
+                throttle = accel(-controller.getAxis(Xbox.L_STICK_VERTICAL_AXIS)),
                 yaw = deaden(controller.getAxis(Xbox.L_STICK_HORIZONTAL_AXIS)),
                 pitch = deaden(controller.getAxis(Xbox.R_STICK_VERTICAL_AXIS)),
                 roll = deaden(controller.getAxis(Xbox.R_STICK_HORIZONTAL_AXIS)),
