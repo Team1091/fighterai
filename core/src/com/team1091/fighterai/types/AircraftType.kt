@@ -19,7 +19,7 @@ enum class AircraftType(
             model = loader.loadModel(Gdx.files.internal("F_22_Raptor.obj")),
             engine = Engine(
                     maxAccel = 50f,
-                    maxYaw = 60f,
+                    maxYaw = 20f,
                     maxRoll = 80f,
                     maxPitch = 80f
             )
@@ -30,7 +30,7 @@ enum class AircraftType(
             model = loader.loadModel(Gdx.files.internal("drone-swept.obj")),
             engine = Engine(
                     maxAccel = 50f,
-                    maxYaw = 60f,
+                    maxYaw = 20f,
                     maxRoll = 80f,
                     maxPitch = 80f
             )
