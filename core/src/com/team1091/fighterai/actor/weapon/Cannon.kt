@@ -13,7 +13,7 @@ class Cannon(val bulletType: BulletType, maxAmmoCount: Int) : Launcher(bulletTyp
 
     override fun project(world: World, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float) {
         // I think we will need a sound player class, that detects the distance to each and scales the audio
-        world.audio.laser()
+        world.audio.laser(position)
         world.newActors.add(Actor(
                 "${shooter.callsign}'s bullet",
                 position,

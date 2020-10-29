@@ -2,11 +2,12 @@ package com.team1091.fighterai
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
-import java.util.*
+import com.badlogic.gdx.math.MathUtils.clamp
+import com.badlogic.gdx.math.Quaternion
+import com.badlogic.gdx.math.Vector3
+import kotlin.random.Random
 
 class AudioManager : IAudioManager {
-
-    val random = Random()
 
     lateinit var laser: Sound
     lateinit var explosion: Sound
@@ -14,34 +15,52 @@ class AudioManager : IAudioManager {
     lateinit var launch: Sound
     lateinit var beep: Sound
 
-    // Loading assets
+    private val viewLocation = Vector3()
+    private val viewOrientation = Quaternion()
 
-    private fun volume() = (random.nextFloat() * 0.1f) + 0.9f
-    private fun pitch() = (random.nextFloat() * 0.2f) + 0.9f
-    private fun pan() = (random.nextFloat() * 0.4f) - 0.2f
+    private fun pitch() = (Random.nextFloat() * 0.2f) + 0.9f
 
     fun init() {
         laser = Gdx.audio.newSound(Gdx.files.internal("audio/laser2.mp3"))
         explosion = Gdx.audio.newSound(Gdx.files.internal("audio/explosions/explosion08.wav"))
         launch = Gdx.audio.newSound(Gdx.files.internal("audio/lowDown.mp3"))
         beep = Gdx.audio.newSound(Gdx.files.internal("audio/lowRandom.mp3"))
-
     }
 
-    override fun explode() {
-        explosion.play(volume(), pitch(), pan())
+
+    override fun setLocation(location: Vector3, orientation: Quaternion) {
+        viewLocation.set(location)
+        viewOrientation.set(orientation)
     }
 
-    override fun laser() {
-        laser.play(volume(), pitch(), pan())
+    fun play(sound: Sound, location: Vector3) {
+
+        // volume is based on distance.  1 = close,  0 = 1000, beyond = 0
+        val dist = viewLocation.dst(location)
+        val volume = clamp(1f - (dist / 1000), 0f, 1f)
+        if (volume <= 0.001f)
+            return
+
+        val fromPerspective = location.cpy().sub(viewLocation).mul(viewOrientation.conjugate()).nor()
+
+//        Gdx.app.log("T", fromPerspective.x.toString())
+        sound.play(volume, pitch(), fromPerspective.x)
     }
 
-    override fun launch() {
-        launch.play(volume(), pitch(), pan())
+    override fun explode(location: Vector3) {
+        play(explosion, location)
     }
 
-    override fun beepFail() {
-        beep.play(volume(), pitch(), pan())
+    override fun laser(location: Vector3) {
+        play(laser, location)
+    }
+
+    override fun launch(location: Vector3) {
+        play(launch, location)
+    }
+
+    override fun beepFail(location: Vector3) {
+        play(beep, location)
     }
 
     fun dispose() {
