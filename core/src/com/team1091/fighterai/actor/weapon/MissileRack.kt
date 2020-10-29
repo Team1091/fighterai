@@ -29,12 +29,12 @@ class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
 
         if (target == null) {
             // fail to fire - should only do this sound to players
-            world.audio.beepFail()
+            world.audio.beepFail(shooter.position)
             return
         }
 
         Gdx.app.log(shooter.callsign, "Fired a missile")
-        world.audio.launch()
+        world.audio.launch(shooter.position)
 
         world.newActors.add(Actor(
                 callsign = "${shooter.callsign}'s ${missileType.name}",

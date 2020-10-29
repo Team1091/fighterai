@@ -2,6 +2,7 @@ package com.team1091.fighterai
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.PerspectiveCamera
+import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.types.up
@@ -31,7 +32,11 @@ class CameraSystem(
 //            currentTarget = world.actors.first { it.respawnable }
 //        }
         // analyze world, find a target
-        val actor = currentTarget
+        val actor = if (currentTarget?.life?.cur ?: 0f > 0f) {
+            currentTarget
+        } else {
+            null
+        }
 
         if (actor != null) {
             // This is a camera directly behind and above.
@@ -71,6 +76,13 @@ class CameraSystem(
         }
         cam.position.set(dolly.pos)
         cam.update()
+
+        if (actor != null) {
+            world.audio.setLocation(dolly.pos, actor.rotation)
+        } else {
+            // TODO: The math to get the rotation from the camera is giving me wrong results.
+            world.audio.setLocation(dolly.pos, cam.view.getRotation(Quaternion()))
+        }
     }
 
     fun resize(width: Int, height: Int) {
