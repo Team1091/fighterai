@@ -8,7 +8,7 @@ import com.team1091.fighterai.actor.pilot.SampleKotlinPilot
 val buildPlayerShip = { AdrianPrototypePilot() }
 
 // This constructs an opposition ai.  Right now it uses your own, but we can set it to vs others later in the dev process
-val buildAdversarialShip = { SampleKotlinPilot() }
+val buildAdversarialShip = { AdrianPrototypePilot() }
 
 val chaseCamera = true
 
