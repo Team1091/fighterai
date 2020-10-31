@@ -22,14 +22,14 @@ class MissileGuidance(val target: Actor) : Pilot {
                 max(us.velocity, 5f)
         )
 
-        val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())
+        val relativePosition = solution.path.mul(us.rotation.cpy().conjugate())
 
-        val (pitch, yaw, roll) = turnTowards(unRotatedTargetOffset)
+        val (pitch, yaw, roll) = turnTowards(relativePosition)
 
         return PilotControl(
                 pitch = pitch,
                 yaw = yaw,
-                throttle = if (unRotatedTargetOffset.y > 0) 1f else 0.25f,
+                throttle = if (relativePosition.y > 0) 1f else 0.25f,
                 // if we are close enough, detonate. velocity takes the place of range here
                 secondaryWeapon = target.position.dst(us.position) < us.secondaryWeaponVelocity
         )
