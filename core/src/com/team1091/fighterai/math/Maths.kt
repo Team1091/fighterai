@@ -40,29 +40,22 @@ fun leadTarget(src: Vector3, targetPos: Vector3, targetVel: Vector3, projectileV
     return FiringSolution(aimSpot, bulletPath, timeToImpact)
 }
 
-fun accel(x: Float) = (0.3f * (x + 1f).pow(2f)) - 0.2f
-
-
+// Gets the angle between two vectors, in radians
 fun angleBetween(a: Vector3, b: Vector3): Float {
 
-    val unitA = a.cpy().nor()!!
-    val unitB = b.cpy().nor()!!
+    val unitA = a.cpy().nor()
+    val unitB = b.cpy().nor()
 
     val dot = unitA.dot(unitB)
     return acos(dot)
 }
 
-
-fun deaden(value: Float): Float {
-    return value * abs(value)
-}
-
-
-fun turnTowards(unRotatedTargetOffset: Vector3): StickPosition =
+// Given a local vector, this turns to that vector
+fun turnTowards(relativePosition: Vector3): StickPosition =
         StickPosition(
-                pitch = if (unRotatedTargetOffset.z > 0f) 1f else -1f,
-                yaw = if (unRotatedTargetOffset.x > 0f) 1f else -1f,
-                roll = if (unRotatedTargetOffset.x > 0f) 1f else -1f
+                pitch = if (relativePosition.z > 0f) 1f else -1f,
+                yaw = if (relativePosition.x > 0f) 1f else -1f,
+                roll = if (relativePosition.x > 0f) 1f else -1f
         )
 
 
@@ -78,7 +71,7 @@ fun <T : Comparable<T>> limit(o: T, min: T, max: T): T {
     else o
 }
 
-// Used to find a target in the forward arc, closest first.
+// Used to find targets in the forward arc.
 fun findInForwardArc(
         world: World,
         us: Actor,
