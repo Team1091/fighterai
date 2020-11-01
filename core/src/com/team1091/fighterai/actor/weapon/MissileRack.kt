@@ -16,13 +16,17 @@ import com.team1091.fighterai.types.MissileType
 class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
         missileType.refireMS,
         missileType.launchVelocity,
-        maxAmmoCount
+        maxAmmoCount,
+        listOf(
+                Vector3(-1f, 1f, -1f),
+                Vector3(1f, 1f, -1f)
+        )
 ) {
     override fun project(world: World, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float) {
 
         // find a target
         val target: Actor? = world.actors.asSequence()
-                .filter { it.engine != null && it != shooter }
+                .filter { it.life != null && it != shooter }
                 .filter { it.faction.isEnemy(shooter.faction) }
                 .filter { it beingAimedAtBy shooter }
                 .minByOrNull { shooter.position.dst2(it.position) }
