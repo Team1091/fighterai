@@ -17,8 +17,6 @@ import com.team1091.fighterai.types.up
  */
 class AdrianPrototypePilot : Pilot {
 
-    var lastTarget: RadarContact? = null
-    var lastTargetTime: Long = 0
     var mode: AiState = AiState.ATTACK
     val groundProximityWarning = 100
     val optimalHeight = 300
@@ -30,6 +28,25 @@ class AdrianPrototypePilot : Pilot {
             // figure out how we are rotated, and which way up is.
             return pullUp(us)
         }
+
+        // Is there an enemy missile coming at us?
+        val incoming = radar.contacts.asSequence()
+                .filter { it.faction.isEnemy(us.faction) }
+                .filter { us.position.dst(it.position) < 100f }
+                .filter { enemy ->
+                    val diff = us.position.cpy().sub(enemy.position)
+                    val aim = forward.cpy().mul(enemy.rotation)
+                    angleBetween(diff, aim) < 0.174533f
+                }
+                .minByOrNull { us.position.dst2(it.position) }
+
+        if (incoming != null) {
+            val enemyVector = forward.cpy().mul(incoming.rotation)
+            val ourVector = forward.cpy().mul(incoming.rotation)
+
+            return flyTowards(us, enemyVector.crs(ourVector))
+        }
+
 
         val target: RadarContact? = acquireTarget(radar, us)
 
@@ -63,6 +80,7 @@ class AdrianPrototypePilot : Pilot {
         }
 
         // else calculate where they will be, and fly towards that location
+        // This should just be used for lining up a target, at extreme distance we should just fly towards them
         val solution = leadTarget(
                 us.position,
                 target.position,
@@ -83,14 +101,14 @@ class AdrianPrototypePilot : Pilot {
         var primary = false
         var secondary = false
         val accel: Float
-        if (unRotatedTargetOffset.y > 0) { // They are in front of  us
+        if (unRotatedTargetOffset.y > 0 && angle < 5 * degreesToRadians) { // They are in front of  us
 
             // if we are close enough, shoot
-            if (us.secondaryWeaponAmmo > 0 && angle < 10 * degreesToRadians && dist < us.secondaryWeaponDuration * us.secondaryWeaponVelocity) {
+            if (us.secondaryWeaponAmmo > 0 && dist < us.secondaryWeaponDuration * us.secondaryWeaponVelocity) {
                 secondary = true
             }
 
-            if (dist < us.primaryWeaponDuration * us.primaryWeaponVelocity && mode == AiState.ATTACK) {
+            if (us.primaryWeaponAmmo > 0 && dist < us.primaryWeaponDuration * us.primaryWeaponVelocity && mode == AiState.ATTACK) {
                 accel = 0.25f
                 primary = us.primaryWeaponAmmo > 0
 
@@ -114,25 +132,14 @@ class AdrianPrototypePilot : Pilot {
     }
 
     private fun acquireTarget(radar: Radar, us: Telemetry): RadarContact? {
-        val time = System.currentTimeMillis()
-        val target: RadarContact?
-
         // find a target, close and in front of us are good ideas
-        if (lastTargetTime + 1000 < time) {
-            target = radar.contacts
-                    .filter {
-                        us.faction.isEnemy(it.faction)
-                    }
-                    .minByOrNull {
-                        it.position.dst(us.position)
-                    }
-
-            lastTarget = target
-            lastTargetTime = time
-        } else {
-            target = lastTarget
-        }
-        return target
+        return radar.contacts
+                .filter {
+                    us.faction.isEnemy(it.faction)
+                }
+                .minByOrNull {
+                    it.position.dst(us.position)
+                }
     }
 
     private fun flyTowards(us: Telemetry, heading: Vector3): PilotControl {
