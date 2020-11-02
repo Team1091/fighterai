@@ -50,6 +50,7 @@ class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
                 life = Life(1f),
                 secondaryWeapon = Explosive(missileType.damage, missileType.explosionRadius),
                 expiration = Expiration(missileType.expiration),
+                faction = shooter.faction,
                 radius = missileType.radius,
                 collider = DamageCollider(1f),
                 engine = missileType.engine

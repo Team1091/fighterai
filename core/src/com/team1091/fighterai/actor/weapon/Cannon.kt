@@ -15,12 +15,13 @@ class Cannon(val bulletType: BulletType, maxAmmoCount: Int) : Launcher(bulletTyp
         // I think we will need a sound player class, that detects the distance to each and scales the audio
         world.audio.laser(position)
         world.newActors.add(Actor(
-                "${shooter.callsign}'s bullet",
-                position,
-                rotation,
-                velocity,
-                bulletType.model,
+                callsign = "${shooter.callsign}'s bullet",
+                position = position,
+                rotation = rotation,
+                velocity = velocity,
+                model = bulletType.model,
                 expiration = Expiration(bulletType.expiration),
+                faction = shooter.faction,
                 radius = bulletType.radius,
                 collider = DamageAndDisappearCollider(bulletType.damage),
                 engine = null,
