@@ -7,22 +7,22 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.team1091.fighterai.actor.Engine
 
 enum class MissileType(
-        val refireMS: Long,
+        val refire: Float,
         val damage: Float,
         val explosionRadius: Float,
         val radius: Float = 0.3f,
         var model: Model,
         val launchVelocity: Float = 40f,
-        val expiration: Long,
+        val expiration: Float,
         val engine: Engine
 ) {
     //TODO: add guidance system
 
     AMRAAM( // guided
-            refireMS = 3000,
+            refire = 3f,
             damage = 20f,
             explosionRadius = 5f,
-            expiration = 10000,
+            expiration = 10f,
             model = modelBuilder.createCone(0.5f, 1f, 0.5f, 3,
                     Material(ColorAttribute.createDiffuse(Color.BLACK)),
                     attr
@@ -36,10 +36,10 @@ enum class MissileType(
 
     ),
     HYDRA( // unguided rocket
-            refireMS = 1000,
+            refire = 1f,
             damage = 10f,
             explosionRadius = 5f,
-            expiration = 8000,
+            expiration = 8f,
             model = modelBuilder.createCone(0.5f, 1f, 0.5f, 3,
                     Material(ColorAttribute.createDiffuse(Color.FIREBRICK)),
                     attr
@@ -52,19 +52,5 @@ enum class MissileType(
             )
 
     );
-//    , // bot weapon
-//    ANACONDA(
-//            refireMS = 20000,
-//            damage = 100f,
-//            explosionRadius = 20f,
-//            radius = 1f,
-//            acceleration = 15f,
-//            turn = 15f,
-//            expiration = 30000,
-//            model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
-//                    Material(ColorAttribute.createDiffuse(Color.CYAN)),
-//                    attr
-//            )
-//    )
 
 }

@@ -5,7 +5,7 @@ import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 
 abstract class Launcher(
-        val refireMS: Long,
+        val refireSeconds: Float,
         val launchVelocity: Float,
         val maxAmmoCount: Int,
         val tubeOffsets: List<Vector3> = listOf(
@@ -18,18 +18,18 @@ abstract class Launcher(
         )
 ) : Weapon {
 
-    private var lastFired: Long = 0
+    private var lastFired: Float = 0f
     private var nextTube = 0
     private var ammoCount = maxAmmoCount
 
     override fun fire(world: World, shooter: Actor) {
-        val millis = System.currentTimeMillis()
+        val now = world.timePassed
 
         if (ammoCount <= 0) {
             return
         }
 
-        if (lastFired + refireMS < millis) {
+        if (lastFired + refireSeconds < now) {
             ammoCount--
             val offset = tubeOffsets[nextTube++].cpy().mul(shooter.rotation)
 
@@ -44,7 +44,7 @@ abstract class Launcher(
                     shooter.velocity + launchVelocity
             )
 
-            lastFired = millis
+            lastFired = now
         }
     }
 
