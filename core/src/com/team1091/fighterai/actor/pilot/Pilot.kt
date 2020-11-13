@@ -7,12 +7,4 @@ interface Pilot {
     fun fly(us: Telemetry, radar: Radar): PilotControl
 }
 
-class Tobey : Pilot {
-
-    override fun fly(us: Telemetry, radar: Radar): PilotControl {
-
-        // This just flies forward
-        return PilotControl()
-    }
-}
 
