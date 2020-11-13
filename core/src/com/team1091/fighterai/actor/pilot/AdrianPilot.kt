@@ -2,6 +2,7 @@ package com.team1091.fighterai.actor.pilot
 
 import com.team1091.fighterai.actor.Radar
 import com.team1091.fighterai.actor.Telemetry
+import com.team1091.fighterai.math.turnTowards
 
 class AdrianPilot : Pilot {
 
@@ -16,27 +17,21 @@ class AdrianPilot : Pilot {
             val relativePosition = enemy.position.cpy().sub(us.position).mul(us.rotation.conjugate())
 
             // If they are above zero go up, otherwise go down
-            val pitch = if (relativePosition.z > 0) 1f else -1f
-            val yaw = if (relativePosition.x > 0) 1f else -1f
+            // val pitch = if (relativePosition.z > 0) 1f else -1f
+            // val yaw = if (relativePosition.x > 0) 1f else -1f
 
+            // This is the same as above, but uses a fuction to hide the details
+            val stickPosition = turnTowards(relativePosition)
 
             return PilotControl(
-                    pitch,
-                    yaw,
-                    0f,
+                    stickPosition.pitch,
+                    stickPosition.yaw,
+                    stickPosition.roll,
                     1f,
                     false,
                     false
             )
-
-
         }
-
-
-//        us.position
-//        us.rotation
-//        us.velocity
-
 
         // This just does loops
         return PilotControl(
