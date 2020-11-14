@@ -6,3 +6,5 @@ import com.team1091.fighterai.actor.Telemetry
 interface Pilot {
     fun fly(us: Telemetry, radar: Radar): PilotControl
 }
+
+

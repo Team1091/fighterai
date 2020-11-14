@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 
 enum class BulletType(
         val launchVelocity: Float = 20f,
-        val refireMS: Long = 1000,
+        val refire: Float = 1f,
         var model: Model,
-        val expiration: Long = 3000,//ms
+        val expiration: Float = 3f, //seconds
         val radius: Float = 0.3f,
         val damage: Float = 2f
         // sound?
@@ -17,13 +17,13 @@ enum class BulletType(
 ) {
     RAILGUN(
             launchVelocity = 300f,
-            refireMS = 2000,
+            refire = 2f,
             model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
                     Material(ColorAttribute.createDiffuse(Color.ORANGE)),
                     attr)),
     M61_VULCAN(
             launchVelocity = 200f,
-            refireMS = 150,
+            refire = 0.15f,
             model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
                     Material(ColorAttribute.createDiffuse(Color.ORANGE)),
                     attr)) // bot weapon, objectively worse

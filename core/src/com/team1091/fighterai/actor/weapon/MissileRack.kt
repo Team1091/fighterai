@@ -14,7 +14,7 @@ import com.team1091.fighterai.types.MissileType
 
 // Fires homing ordinance
 class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
-        missileType.refireMS,
+        missileType.refire,
         missileType.launchVelocity,
         maxAmmoCount,
         listOf(
@@ -49,7 +49,8 @@ class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
                 pilot = MissileGuidance(target),
                 life = Life(1f),
                 secondaryWeapon = Explosive(missileType.damage, missileType.explosionRadius),
-                expiration = Expiration(missileType.expiration),
+                expiration = Expiration(world.timePassed + missileType.expiration),
+                faction = shooter.faction,
                 radius = missileType.radius,
                 collider = DamageCollider(1f),
                 engine = missileType.engine

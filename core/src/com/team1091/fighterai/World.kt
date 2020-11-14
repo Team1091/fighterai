@@ -22,7 +22,11 @@ class World(val audio: IAudioManager) {
     var respawnActors = mutableListOf<Actor>()
     var otherGeometry = mutableListOf<ModelInstance>()
 
+    var timePassed = 0f
+
     fun simulate(dt: Float) {
+        timePassed += dt
+
         // Simulate
         for (craft in actors) {
 
