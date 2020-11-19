@@ -144,8 +144,8 @@ class AdrianPrototypePilot : Pilot {
 
     private fun flyTowards(us: Telemetry, heading: Vector3): PilotControl {
 
-        val localUp = heading.cpy().mul(us.rotation.cpy().conjugate())
-        val (pitch, yaw, roll) = turnTowards(localUp)
+        val relativePosition = heading.cpy().mul(us.rotation.cpy().conjugate())
+        val (pitch, yaw, roll) = turnTowards(relativePosition)
 
         return PilotControl(
                 pitch = pitch,
