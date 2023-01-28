@@ -25,6 +25,7 @@ class World(val audio: IAudioManager) {
     var timePassed = 0f
 
     fun simulate(dt: Float) {
+//        val dt = dta * 2f
         timePassed += dt
 
         // Simulate

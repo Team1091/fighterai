@@ -42,7 +42,7 @@ class AdrianPrototypePilot : Pilot {
 
         if (incoming != null) {
             val enemyVector = forward.cpy().mul(incoming.rotation)
-            val ourVector = forward.cpy().mul(incoming.rotation)
+            val ourVector = forward.cpy().mul(us.rotation)
 
             return flyTowards(us, enemyVector.crs(ourVector))
         }
@@ -87,15 +87,16 @@ class AdrianPrototypePilot : Pilot {
             us.position,
             target.position,
             Vector3(0f, target.velocity, 0f).mul(target.rotation),
-            us.velocity + us.primaryWeaponVelocity
+            us.primaryWeaponVelocity
         )
 
         val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())
 
-        val angle = angleBetween(forward, unRotatedTargetOffset)
-        val power = if (angle < 0.3) {
-            angle * (1f / 0.3f)
-        } else 1f
+        val angleInRadians = angleBetween(forward, unRotatedTargetOffset)
+        val turnPower = 1f;
+//        if (angleInRadians < 15 * degreesToRadians) {
+//            angleInRadians * (1f / 3f)
+//        } else 1f
 
         val (pitch, yaw, roll) = turnTowards(unRotatedTargetOffset)
 
@@ -103,14 +104,14 @@ class AdrianPrototypePilot : Pilot {
         var primary = false
         var secondary = false
         val accel: Float
-        if (unRotatedTargetOffset.y > 0 && angle < 5 * degreesToRadians) { // They are in front of  us
+        if (unRotatedTargetOffset.y > 0 && angleInRadians < 5 * degreesToRadians) { // They are in front of  us
 
             // if we are close enough, shoot
-            if (us.secondaryWeaponAmmo > 0 && dist < us.secondaryWeaponDuration * us.secondaryWeaponVelocity) {
+            if (us.secondaryWeaponAmmo > 0 && dist < us.secondaryWeaponRange) {
                 secondary = true
             }
 
-            if (us.primaryWeaponAmmo > 0 && dist < us.primaryWeaponDuration * us.primaryWeaponVelocity && mode == AiState.ATTACK) {
+            if (us.primaryWeaponAmmo > 0 && dist < us.primaryWeaponRange && mode == AiState.ATTACK) {
                 accel = 0.25f
                 primary = true
             } else {
@@ -122,9 +123,9 @@ class AdrianPrototypePilot : Pilot {
         }
 
         return PilotControl(
-            pitch = pitch * towards * power,
-            yaw = yaw * towards * power,
-            roll = roll * towards * power,
+            pitch = pitch * towards * turnPower,
+            yaw = yaw * towards * turnPower,
+            roll = roll * towards * turnPower,
             throttle = accel,
             primaryWeapon = primary,
             secondaryWeapon = secondary
@@ -172,6 +173,10 @@ class AdrianPrototypePilot : Pilot {
             primaryWeapon = false,
             secondaryWeapon = false
         )
+    }
+
+    override fun getDebugString(): String {
+        return mode.toString()
     }
 
 }

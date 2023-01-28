@@ -20,4 +20,10 @@ public class SampleJavaPilot implements Pilot {
                 false
         );
     }
+
+    @NotNull
+    @Override
+    public String getDebugString() {
+        return "Test";
+    }
 }

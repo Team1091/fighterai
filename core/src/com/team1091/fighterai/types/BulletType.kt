@@ -25,6 +25,6 @@ enum class BulletType(
             launchVelocity = 200f,
             refire = 0.15f,
             model = modelBuilder.createCone(0.25f, 0.25f, 0.25f, 3,
-                    Material(ColorAttribute.createDiffuse(Color.ORANGE)),
+                    Material(ColorAttribute.createDiffuse(Color.YELLOW)),
                     attr)) // bot weapon, objectively worse
 }

@@ -16,7 +16,7 @@ class CameraSystem(
         cam.near = 1f
         cam.far = 10000f
     }
-
+    var lookAtTarget: Actor? = null
     var currentTarget: Actor? = null
     val dolly = Dolly(
             pos = Vector3(100f, 100f, 1f),
@@ -38,7 +38,30 @@ class CameraSystem(
             null
         }
 
-        if (actor != null) {
+        val lookAtTarget = if (lookAtTarget?.life?.cur ?: 0f > 0f) {
+            lookAtTarget
+        } else {
+            null
+        }
+
+        if (actor != null && lookAtTarget != null) {
+            // looking at a nearby target
+
+            // this should be on the otherside of the plane
+            val offset = lookAtTarget.position.cpy()
+                .sub(actor.position)
+                .nor().scl(-10f)
+                .add(Vector3(1f, 1f, 1f))
+
+            val targetCameraPosition = actor.position.cpy().add(offset)
+
+            dolly.pos.set(targetCameraPosition)
+
+            // val diff = targetCameraPosition.cpy().sub(actor.position)
+            // dolly.vel.add(diff.nor())
+            cam.lookAt(lookAtTarget.position.cpy())
+            cam.up.set(up.cpy().mul(actor.rotation))
+        } else if (actor != null) {
             // This is a camera directly behind and above.
 
             val targetCameraPosition = actor.position.cpy().add(Vector3(0f, -5f, 1f).mul(actor.rotation))

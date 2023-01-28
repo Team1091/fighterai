@@ -3,7 +3,11 @@ package com.team1091.fighterai.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
-import com.badlogic.gdx.graphics.*
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelBatch
@@ -14,21 +18,27 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
-import com.team1091.fighterai.*
+import com.team1091.fighterai.CameraSystem
+import com.team1091.fighterai.FighterAIGame
+import com.team1091.fighterai.Mission
+import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.actor.DamageCollider
 import com.team1091.fighterai.actor.Faction
 import com.team1091.fighterai.actor.Life
 import com.team1091.fighterai.actor.weapon.Cannon
 import com.team1091.fighterai.actor.weapon.MissileRack
+import com.team1091.fighterai.cameraType
+import com.team1091.fighterai.showHud
 import com.team1091.fighterai.types.BulletType
+import com.team1091.fighterai.types.CameraType
 import com.team1091.fighterai.types.MissileType
 import com.team1091.fighterai.types.up
 import java.lang.Float.min
 
 class CombatScreen(
-        val fighterAIGame: FighterAIGame,
-        val mission: Mission
+    val fighterAIGame: FighterAIGame,
+    val mission: Mission
 ) : Screen {
 
 
@@ -59,14 +69,17 @@ class CombatScreen(
 
         val modelBuilder = ModelBuilder()
 
-        val attr = (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
+        val attr =
+            (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
         modelBuilder.begin()
         modelBuilder.part("front", GL20.GL_TRIANGLES, attr, Material(TextureAttribute.createDiffuse(imgTextureRegion)))
-                .rect(size, size, 0f,
-                        -size, size, 0f,
-                        -size, -size, 0f,
-                        size, -size, 0f,
-                        0f, 0f, 1f)
+            .rect(
+                size, size, 0f,
+                -size, size, 0f,
+                -size, -size, 0f,
+                size, -size, 0f,
+                0f, 0f, 1f
+            )
 
         val groundModel = modelBuilder.end()
 
@@ -83,27 +96,35 @@ class CombatScreen(
                 val pilot = flightGroup.pilot()
                 world.actors.add(
 
-                        Actor(
-                                callsign = flightGroup.faction.name + " " + pilot.javaClass.simpleName,
-                                position = flightGroup.placement.pos.cpy().add(up.cpy().scl(offset.toFloat() * 10)),
-                                rotation = flightGroup.placement.rotation.cpy(),
-                                velocity = 300f,
-                                model = aircraftType.model,
-                                pilot = pilot,
-                                life = Life(aircraftType.life),
-                                primaryWeapon = Cannon(BulletType.M61_VULCAN, 1000),
-                                secondaryWeapon = MissileRack(MissileType.AMRAAM, 4),
-                                faction = flightGroup.faction,
-                                radius = 1f,
-                                collider = DamageCollider(4f),
-                                respawns = 1,
-                                engine = aircraftType.engine,
-                                friction = 0.6f
-                        )
+                    Actor(
+                        callsign = flightGroup.faction.name + " " + pilot.javaClass.simpleName,
+                        position = flightGroup.placement.pos.cpy().add(up.cpy().scl(offset.toFloat() * 10)),
+                        rotation = flightGroup.placement.rotation.cpy(),
+                        velocity = 300f,
+                        model = aircraftType.model,
+                        pilot = pilot,
+                        life = Life(aircraftType.life),
+                        primaryWeapon = Cannon(BulletType.M61_VULCAN, 1000),
+                        secondaryWeapon = MissileRack(MissileType.AMRAAM, 4),
+                        faction = flightGroup.faction,
+                        radius = aircraftType.radius,
+                        collider = DamageCollider(4f),
+                        respawns = 1,
+                        engine = aircraftType.engine,
+                        friction = 0.6f
+                    )
                 )
 
-                if (chaseCamera)
+                // TODO: these probably could be moved into the cameraSystem
+                if (cameraType == CameraType.CHASE || cameraType == CameraType.CHASE_TARGET) {
                     cameraMan.currentTarget = world.actors.first()
+                }
+
+                if (cameraType == CameraType.CHASE_TARGET) {
+                    cameraMan.lookAtTarget = world.actors
+                        .filter { it != cameraMan.currentTarget }
+                        .minByOrNull { cameraMan.currentTarget?.position?.dst(it.position) ?: Float.MAX_VALUE }
+                }
             }
 
         }
@@ -111,20 +132,22 @@ class CombatScreen(
         // Add buildings
         mission.structures.forEach { structure ->
             world.actors.add(
-                    Actor(
-                            callsign = "building",
-                            position = Vector3(structure.position.x, structure.position.y, 3f),
-                            rotation = Quaternion(),
-                            velocity = 0f,
-                            model = modelBuilder.createBox(5f, 5f, 5f,
-                                    Material(ColorAttribute.createDiffuse(Color.ORANGE)),
-                                    com.team1091.fighterai.types.attr),
-                            life = Life(10f),
-                            faction = structure.faction,
-                            radius = 3f,
-                            collider = DamageCollider(10f),
-                            engine = null
-                    )
+                Actor(
+                    callsign = "building",
+                    position = Vector3(structure.position.x, structure.position.y, 3f),
+                    rotation = Quaternion(),
+                    velocity = 0f,
+                    model = modelBuilder.createBox(
+                        5f, 5f, 5f,
+                        Material(ColorAttribute.createDiffuse(Color.ORANGE)),
+                        com.team1091.fighterai.types.attr
+                    ),
+                    life = Life(10f),
+                    faction = structure.faction,
+                    radius = 3f,
+                    collider = DamageCollider(10f),
+                    engine = null
+                )
             )
 
         }
@@ -230,8 +253,18 @@ class CombatScreen(
             }
 
             font.draw(spriteBatch, player.callsign, xOffset, yOffset - 16)
-            font.draw(spriteBatch, "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}", xOffset, yOffset - 32)
-            font.draw(spriteBatch, "HP: ${player.life?.cur ?: 0} Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}", xOffset, yOffset - 48)
+            font.draw(
+                spriteBatch,
+                "Vel: ${player.velocity.toInt()}  Ele: ${player.position.z.toInt()}",
+                xOffset,
+                yOffset - 32
+            )
+            font.draw(
+                spriteBatch,
+                "HP: ${player.life?.cur ?: 0} Gun: ${player.primaryWeapon?.getAmmo() ?: 0}  MSL: ${player.secondaryWeapon?.getAmmo() ?: 0}",
+                xOffset,
+                yOffset - 48
+            )
         }
         spriteBatch.end()
     }

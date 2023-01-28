@@ -8,7 +8,7 @@ import com.team1091.fighterai.actor.pilot.Pilot
 import com.team1091.fighterai.actor.weapon.Weapon
 import java.util.UUID.randomUUID
 
-open class Actor(
+class Actor(
         val callsign: String,
         val position: Vector3,
         val rotation: Quaternion,
@@ -20,7 +20,7 @@ open class Actor(
         val secondaryWeapon: Weapon? = null,
         val faction: Faction = Faction.UNALIGNED,
         val expiration: Expiration? = null,
-        val radius: Float = 1f,
+        val radius: Float,
         val collider: Collider?,
         var respawns: Int = 0,
         val engine: Engine?,
