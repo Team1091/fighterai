@@ -17,9 +17,9 @@ import com.team1091.fighterai.types.up
  */
 class AdrianPrototypePilot : Pilot {
 
-    var mode: AiState = AiState.ATTACK
-    val groundProximityWarning = 100
-    val optimalHeight = 300
+    private var mode: AiState = AiState.ATTACK
+    private val groundProximityWarning = 100
+    private val optimalHeight = 300
 
     override fun fly(us: Telemetry, radar: Radar): PilotControl {
 
