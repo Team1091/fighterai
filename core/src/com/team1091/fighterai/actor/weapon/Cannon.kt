@@ -30,5 +30,5 @@ class Cannon(val bulletType: BulletType, maxAmmoCount: Int) : Launcher(bulletTyp
     }
 
     override fun getVelocity(): Float = launchVelocity
-    override fun getDuration(): Float = bulletType.expiration / 1000f
+    override fun getDuration(): Float = bulletType.expiration
 }

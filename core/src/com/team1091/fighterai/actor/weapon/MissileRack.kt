@@ -58,5 +58,5 @@ class MissileRack(val missileType: MissileType, maxAmmoCount: Int) : Launcher(
     }
 
     override fun getVelocity(): Float = launchVelocity
-    override fun getDuration(): Float = missileType.expiration / 1000f
+    override fun getDuration(): Float = missileType.expiration
 }

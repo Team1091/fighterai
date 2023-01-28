@@ -31,14 +31,14 @@ class AdrianPrototypePilot : Pilot {
 
         // Is there an enemy missile coming at us?
         val incoming = radar.contacts.asSequence()
-                .filter { it.faction.isEnemy(us.faction) }
-                .filter { us.position.dst(it.position) < 100f }
-                .filter { enemy ->
-                    val diff = us.position.cpy().sub(enemy.position)
-                    val aim = forward.cpy().mul(enemy.rotation)
-                    angleBetween(diff, aim) < 0.174533f
-                }
-                .minByOrNull { us.position.dst2(it.position) }
+            .filter { it.faction.isEnemy(us.faction) }
+            .filter { us.position.dst(it.position) < 100f }
+            .filter { enemy ->
+                val diff = us.position.cpy().sub(enemy.position)
+                val aim = forward.cpy().mul(enemy.rotation)
+                angleBetween(diff, aim) < 0.174533f
+            }
+            .minByOrNull { us.position.dst2(it.position) }
 
         if (incoming != null) {
             val enemyVector = forward.cpy().mul(incoming.rotation)
@@ -69,11 +69,13 @@ class AdrianPrototypePilot : Pilot {
                     mode = AiState.RETREAT
                 1f
             }
+
             AiState.RETREAT -> {
                 if (dist > 300f)
                     mode = AiState.ATTACK
                 -1f
             }
+
             AiState.EVADE -> {
                 0f
             }
@@ -82,10 +84,10 @@ class AdrianPrototypePilot : Pilot {
         // else calculate where they will be, and fly towards that location
         // This should just be used for lining up a target, at extreme distance we should just fly towards them
         val solution = leadTarget(
-                us.position,
-                target.position,
-                Vector3(0f, target.velocity, 0f).mul(target.rotation),
-                us.velocity + us.primaryWeaponVelocity
+            us.position,
+            target.position,
+            Vector3(0f, target.velocity, 0f).mul(target.rotation),
+            us.velocity + us.primaryWeaponVelocity
         )
 
         val unRotatedTargetOffset = solution.path.mul(us.rotation.cpy().conjugate())
@@ -110,8 +112,7 @@ class AdrianPrototypePilot : Pilot {
 
             if (us.primaryWeaponAmmo > 0 && dist < us.primaryWeaponDuration * us.primaryWeaponVelocity && mode == AiState.ATTACK) {
                 accel = 0.25f
-                primary = us.primaryWeaponAmmo > 0
-
+                primary = true
             } else {
                 accel = 1f
             }
@@ -121,12 +122,12 @@ class AdrianPrototypePilot : Pilot {
         }
 
         return PilotControl(
-                pitch = pitch * towards * power,
-                yaw = yaw * towards * power,
-                roll = roll * towards * power,
-                throttle = accel,
-                primaryWeapon = primary,
-                secondaryWeapon = secondary
+            pitch = pitch * towards * power,
+            yaw = yaw * towards * power,
+            roll = roll * towards * power,
+            throttle = accel,
+            primaryWeapon = primary,
+            secondaryWeapon = secondary
         )
 
     }
@@ -134,12 +135,12 @@ class AdrianPrototypePilot : Pilot {
     private fun acquireTarget(radar: Radar, us: Telemetry): RadarContact? {
         // find a target, close and in front of us are good ideas
         return radar.contacts
-                .filter {
-                    us.faction.isEnemy(it.faction)
-                }
-                .minByOrNull {
-                    it.position.dst(us.position)
-                }
+            .filter {
+                us.faction.isEnemy(it.faction)
+            }
+            .minByOrNull {
+                it.position.dst(us.position)
+            }
     }
 
     private fun flyTowards(us: Telemetry, heading: Vector3): PilotControl {
@@ -148,12 +149,12 @@ class AdrianPrototypePilot : Pilot {
         val (pitch, yaw, roll) = turnTowards(relativePosition)
 
         return PilotControl(
-                pitch = pitch,
-                yaw = yaw,
-                roll = roll,
-                throttle = 1f,
-                primaryWeapon = false,
-                secondaryWeapon = false
+            pitch = pitch,
+            yaw = yaw,
+            roll = roll,
+            throttle = 1f,
+            primaryWeapon = false,
+            secondaryWeapon = false
         )
 
     }
@@ -164,12 +165,12 @@ class AdrianPrototypePilot : Pilot {
 
         Gdx.app.log(us.callsign, "Emergency pull up")
         return PilotControl(
-                pitch = pitch,
-                yaw = yaw,
-                roll = roll,
-                throttle = 1f,
-                primaryWeapon = false,
-                secondaryWeapon = false
+            pitch = pitch,
+            yaw = yaw,
+            roll = roll,
+            throttle = 1f,
+            primaryWeapon = false,
+            secondaryWeapon = false
         )
     }
 
