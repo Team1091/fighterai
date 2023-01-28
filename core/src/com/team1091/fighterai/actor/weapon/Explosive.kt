@@ -9,8 +9,8 @@ import com.team1091.fighterai.actor.Actor
  * Self destruction device, used in rockets and bombs
  */
 class Explosive(
-        val damage: Float,
-        val explosionRadius: Float
+    val damage: Float,
+    val explosionRadius: Float
 ) : Weapon {
 
     override fun fire(world: World, shooter: Actor) {
@@ -19,8 +19,8 @@ class Explosive(
 
     override fun project(world: World, shooter: Actor, position: Vector3, rotation: Quaternion, velocity: Float) {
         world.actors
-                .filter { it.position.dst(shooter.position) < explosionRadius }
-                .forEach { it.life?.takeDamage(world, it, damage) }
+            .filter { it.position.dst(shooter.position) < explosionRadius }
+            .forEach { it.life?.takeDamage(world, it, damage) }
 
         // destroy ourselves
         world.removeActors.add(shooter)

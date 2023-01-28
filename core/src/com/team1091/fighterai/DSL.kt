@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector2
 import com.team1091.fighterai.actor.Faction
-import com.team1091.fighterai.actor.pilot.KeyboardPilot
 import com.team1091.fighterai.actor.pilot.Pilot
 import com.team1091.fighterai.types.AircraftType
 
@@ -102,7 +101,7 @@ val campaign = Campaign(
                     placement = PlayerStart.EAST
                 ),
                 FlightGroup(
-                    pilot = buildAdversarialShip , // {KeyboardPilot()},//
+                    pilot = buildAdversarialShip, // {KeyboardPilot()},//
                     faction = Faction.BLUE,
                     aircraftType = AircraftType.X56,
                     qty = 1,

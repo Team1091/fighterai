@@ -25,12 +25,12 @@ class TobeyPilot : Pilot {
 
 
             return PilotControl(
-                    pitch,
-                    yaw,
-                    0f,
-                    1f,
-                    false,
-                    false
+                pitch,
+                yaw,
+                0f,
+                1f,
+                false,
+                false
             )
 
 
@@ -43,12 +43,12 @@ class TobeyPilot : Pilot {
 
         // This just does loops
         return PilotControl(
-                1f,
-                0f,
-                0f,
-                1f,
-                false,
-                false
+            1f,
+            0f,
+            0f,
+            1f,
+            false,
+            false
         )
     }
 }

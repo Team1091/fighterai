@@ -8,7 +8,7 @@ import com.team1091.fighterai.actor.Actor
 import com.team1091.fighterai.types.up
 
 class CameraSystem(
-        val world: World
+    val world: World
 ) {
     val cam: PerspectiveCamera = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
 
@@ -16,11 +16,12 @@ class CameraSystem(
         cam.near = 1f
         cam.far = 10000f
     }
+
     var lookAtTarget: Actor? = null
     var currentTarget: Actor? = null
     val dolly = Dolly(
-            pos = Vector3(100f, 100f, 1f),
-            vel = Vector3(0f, 0f, 10f)
+        pos = Vector3(100f, 100f, 1f),
+        vel = Vector3(0f, 0f, 10f)
     )
 
     fun look(delta: Float) {

@@ -16,10 +16,10 @@ class MissileGuidance(val target: Actor) : Pilot {
 
         // else calculate where they will be, and fly towards that location
         val solution = leadTarget(
-                us.position,
-                target.position,
-                Vector3(0f, target.velocity, 0f).mul(target.rotation),
-                max(us.velocity, 5f)
+            us.position,
+            target.position,
+            Vector3(0f, target.velocity, 0f).mul(target.rotation),
+            max(us.velocity, 5f)
         )
 
         val relativePosition = solution.path.mul(us.rotation.cpy().conjugate())
@@ -27,11 +27,11 @@ class MissileGuidance(val target: Actor) : Pilot {
         val (pitch, yaw, roll) = turnTowards(relativePosition)
 
         return PilotControl(
-                pitch = pitch,
-                yaw = yaw,
-                throttle = if (relativePosition.y > 0) 1f else 0.25f,
-                // if we are close enough, detonate. velocity takes the place of range here
-                secondaryWeapon = target.position.dst(us.position) < us.secondaryWeaponVelocity
+            pitch = pitch,
+            yaw = yaw,
+            throttle = if (relativePosition.y > 0) 1f else 0.25f,
+            // if we are close enough, detonate. velocity takes the place of range here
+            secondaryWeapon = target.position.dst(us.position) < us.secondaryWeaponVelocity
         )
     }
 }

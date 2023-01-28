@@ -9,7 +9,6 @@ public class SampleJavaPilot implements Pilot {
     @Override
     public PilotControl fly(@NotNull Telemetry us, @NotNull Radar radar) {
 
-
         // Just do loops.  It makes us harder to hit
         return new PilotControl(
                 1,

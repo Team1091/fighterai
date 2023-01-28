@@ -5,17 +5,17 @@ import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
 
 abstract class Launcher(
-        val refireSeconds: Float,
-        val launchVelocity: Float,
-        val maxAmmoCount: Int,
-        val tubeOffsets: List<Vector3> = listOf(
-                Vector3(1f, 2f, 0f),
-                Vector3(-1f, 2f, 0f)
+    val refireSeconds: Float,
+    val launchVelocity: Float,
+    val maxAmmoCount: Int,
+    val tubeOffsets: List<Vector3> = listOf(
+        Vector3(1f, 2f, 0f),
+        Vector3(-1f, 2f, 0f)
 //                right.cpy().scl(2f).add(forward),
 //                left.cpy().scl(2f).add(forward),
 //                up.cpy().scl(2f).add(forward),
 //                down.cpy().scl(2f).add(forward)
-        )
+    )
 ) : Weapon {
 
     private var lastFired: Float = 0f
@@ -37,11 +37,11 @@ abstract class Launcher(
                 nextTube = 0
 
             project(
-                    world,
-                    shooter,
-                    shooter.position.cpy().add(offset),
-                    shooter.rotation.cpy(),
-                    shooter.velocity + launchVelocity
+                world,
+                shooter,
+                shooter.position.cpy().add(offset),
+                shooter.rotation.cpy(),
+                shooter.velocity + launchVelocity
             )
 
             lastFired = now

@@ -61,13 +61,11 @@ public class OpenSimplexNoise {
         permGrad3 = new Grad3[PSIZE];
         permGrad4 = new Grad4[PSIZE];
         short[] source = new short[PSIZE];
-        for (short i = 0; i < PSIZE; i++)
-            source[i] = i;
+        for (short i = 0; i < PSIZE; i++) {source[i] = i;}
         for (int i = PSIZE - 1; i >= 0; i--) {
             seed = seed * 6364136223846793005L + 1442695040888963407L;
             int r = (int) ((seed + 31) % (i + 1));
-            if (r < 0)
-                r += (i + 1);
+            if (r < 0) {r += (i + 1);}
             perm[i] = source[r];
             permGrad2[i] = GRADIENTS_2D[perm[i]];
             permGrad3[i] = GRADIENTS_3D[perm[i]];
@@ -1399,7 +1397,6 @@ public class OpenSimplexNoise {
                         wsv_ext2 += 2;
                         dw_ext2 -= 2;
                     }
-
                 } else { // Both closest points on the smaller side
                     // One of the two extra points is (0,0,0,0)
                     xsv_ext2 = xsb;
@@ -1463,7 +1460,6 @@ public class OpenSimplexNoise {
                         wsv_ext0 = wsv_ext1 = wsb + 1;
                         dw_ext0 = dw_ext1 = dw0 - 1 - SQUISH_CONSTANT_4D;
                     }
-
                 }
             } else { // One point on each "side"
                 byte c1, c2;
@@ -2081,21 +2077,27 @@ public class OpenSimplexNoise {
         double attn_ext0 = 2 - dx_ext0 * dx_ext0 - dy_ext0 * dy_ext0 - dz_ext0 * dz_ext0 - dw_ext0 * dw_ext0;
         if (attn_ext0 > 0) {
             attn_ext0 *= attn_ext0;
-            value += attn_ext0 * attn_ext0 * extrapolate(xsv_ext0, ysv_ext0, zsv_ext0, wsv_ext0, dx_ext0, dy_ext0, dz_ext0, dw_ext0);
+            value +=
+                    attn_ext0 * attn_ext0 *
+                            extrapolate(xsv_ext0, ysv_ext0, zsv_ext0, wsv_ext0, dx_ext0, dy_ext0, dz_ext0, dw_ext0);
         }
 
         // Second extra vertex
         double attn_ext1 = 2 - dx_ext1 * dx_ext1 - dy_ext1 * dy_ext1 - dz_ext1 * dz_ext1 - dw_ext1 * dw_ext1;
         if (attn_ext1 > 0) {
             attn_ext1 *= attn_ext1;
-            value += attn_ext1 * attn_ext1 * extrapolate(xsv_ext1, ysv_ext1, zsv_ext1, wsv_ext1, dx_ext1, dy_ext1, dz_ext1, dw_ext1);
+            value +=
+                    attn_ext1 * attn_ext1 *
+                            extrapolate(xsv_ext1, ysv_ext1, zsv_ext1, wsv_ext1, dx_ext1, dy_ext1, dz_ext1, dw_ext1);
         }
 
         // Third extra vertex
         double attn_ext2 = 2 - dx_ext2 * dx_ext2 - dy_ext2 * dy_ext2 - dz_ext2 * dz_ext2 - dw_ext2 * dw_ext2;
         if (attn_ext2 > 0) {
             attn_ext2 *= attn_ext2;
-            value += attn_ext2 * attn_ext2 * extrapolate(xsv_ext2, ysv_ext2, zsv_ext2, wsv_ext2, dx_ext2, dy_ext2, dz_ext2, dw_ext2);
+            value +=
+                    attn_ext2 * attn_ext2 *
+                            extrapolate(xsv_ext2, ysv_ext2, zsv_ext2, wsv_ext2, dx_ext2, dy_ext2, dz_ext2, dw_ext2);
         }
 
         return value;
@@ -2425,5 +2427,4 @@ public class OpenSimplexNoise {
             GRADIENTS_4D[i] = grad4[i % grad4.length];
         }
     }
-
 }

@@ -1,9 +1,6 @@
 package com.team1091.fighterai
 
-import com.team1091.fighterai.actor.pilot.AdrianPilot
 import com.team1091.fighterai.actor.pilot.AdrianPrototypePilot
-import com.team1091.fighterai.actor.pilot.KeyboardPilot
-import com.team1091.fighterai.actor.pilot.SampleKotlinPilot
 import com.team1091.fighterai.types.CameraType
 
 // This will be where we set out default ai class.  Try not to commit this file.

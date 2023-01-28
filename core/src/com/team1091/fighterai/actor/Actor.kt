@@ -9,22 +9,22 @@ import com.team1091.fighterai.actor.weapon.Weapon
 import java.util.UUID.randomUUID
 
 class Actor(
-        val callsign: String,
-        val position: Vector3,
-        val rotation: Quaternion,
-        var velocity: Float = 0f,
-        model: Model,
-        val pilot: Pilot? = null,
-        val life: Life? = null,
-        val primaryWeapon: Weapon? = null,
-        val secondaryWeapon: Weapon? = null,
-        val faction: Faction = Faction.UNALIGNED,
-        val expiration: Expiration? = null,
-        val radius: Float,
-        val collider: Collider?,
-        var respawns: Int = 0,
-        val engine: Engine?,
-        val friction: Float = 0.6f
+    val callsign: String,
+    val position: Vector3,
+    val rotation: Quaternion,
+    var velocity: Float = 0f,
+    model: Model,
+    val pilot: Pilot? = null,
+    val life: Life? = null,
+    val primaryWeapon: Weapon? = null,
+    val secondaryWeapon: Weapon? = null,
+    val faction: Faction = Faction.UNALIGNED,
+    val expiration: Expiration? = null,
+    val radius: Float,
+    val collider: Collider?,
+    var respawns: Int = 0,
+    val engine: Engine?,
+    val friction: Float = 0.6f
 ) {
     val instance = ModelInstance(model)
     val worldId = randomUUID()
@@ -35,20 +35,20 @@ class Actor(
 
     fun toTelemetry(): Telemetry {
         return Telemetry(
-                worldId = worldId,
-                callsign = callsign,
-                position = position.cpy(),
-                rotation = rotation.cpy(),
-                velocity = velocity,
-                life = life?.cur ?: 0f,
-                primaryWeaponVelocity = primaryWeapon?.getVelocity() ?: 0f,
-                primaryWeaponDuration = primaryWeapon?.getDuration() ?: 0f,
-                primaryWeaponAmmo = primaryWeapon?.getAmmo() ?: 0,
-                secondaryWeaponVelocity = secondaryWeapon?.getVelocity() ?: 0f,
-                secondaryWeaponDuration = secondaryWeapon?.getDuration() ?: 0f,
-                secondaryWeaponAmmo = secondaryWeapon?.getAmmo() ?: 0,
-                faction = faction,
-                radius = radius
+            worldId = worldId,
+            callsign = callsign,
+            position = position.cpy(),
+            rotation = rotation.cpy(),
+            velocity = velocity,
+            life = life?.cur ?: 0f,
+            primaryWeaponVelocity = primaryWeapon?.getVelocity() ?: 0f,
+            primaryWeaponDuration = primaryWeapon?.getDuration() ?: 0f,
+            primaryWeaponAmmo = primaryWeapon?.getAmmo() ?: 0,
+            secondaryWeaponVelocity = secondaryWeapon?.getVelocity() ?: 0f,
+            secondaryWeaponDuration = secondaryWeapon?.getDuration() ?: 0f,
+            secondaryWeaponAmmo = secondaryWeapon?.getAmmo() ?: 0,
+            faction = faction,
+            radius = radius
         )
     }
 

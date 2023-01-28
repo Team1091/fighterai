@@ -9,12 +9,12 @@ class BlakePilot : Pilot {
 
         // This just does loops
         return PilotControl(
-                1f,
-                0f,
-                0f,
-                1f,
-                true,
-                true
+            1f,
+            0f,
+            0f,
+            1f,
+            true,
+            true
         )
     }
 }

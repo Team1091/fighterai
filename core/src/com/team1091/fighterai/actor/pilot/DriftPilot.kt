@@ -9,9 +9,9 @@ class DriftPilot : Pilot {
 
     // When we make a new one, we choose a random position for our sticks to be in, then just always return that.
     val control = PilotControl(
-            pitch = Random().nextFloat(),
-            yaw = Random().nextFloat(),
-            roll = Random().nextFloat()
+        pitch = Random().nextFloat(),
+        yaw = Random().nextFloat(),
+        roll = Random().nextFloat()
     )
 
     override fun fly(us: Telemetry, radar: Radar) = control

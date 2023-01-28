@@ -24,12 +24,12 @@ class KeyboardPilot : Pilot {
         val shift = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
 
         return PilotControl(
-                throttle = (if (up) 1f else 0.5f) + (if (down) -0.5f else 0f),
-                yaw = (if (left) -1f else 0f) + (if (right) 1f else 0f),
-                pitch = (if (s) 1f else 0f) + (if (w) -1f else 0f),
-                roll = (if (a) -1f else 0f) + (if (d) 1f else 0f),
-                primaryWeapon = space,
-                secondaryWeapon = shift
+            throttle = (if (up) 1f else 0.5f) + (if (down) -0.5f else 0f),
+            yaw = (if (left) -1f else 0f) + (if (right) 1f else 0f),
+            pitch = (if (s) 1f else 0f) + (if (w) -1f else 0f),
+            roll = (if (a) -1f else 0f) + (if (d) 1f else 0f),
+            primaryWeapon = space,
+            secondaryWeapon = shift
         )
     }
 }

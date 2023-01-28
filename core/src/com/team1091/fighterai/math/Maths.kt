@@ -3,11 +3,8 @@ package com.team1091.fighterai.math
 import com.badlogic.gdx.math.Vector3
 import com.team1091.fighterai.World
 import com.team1091.fighterai.actor.Actor
-
 import com.team1091.fighterai.types.forward
-import kotlin.math.abs
 import kotlin.math.acos
-import kotlin.math.pow
 import kotlin.math.sqrt
 
 // https://gamedev.stackexchange.com/questions/35859/algorithm-to-shoot-at-a-target-in-a-3d-game
@@ -52,17 +49,17 @@ fun angleBetween(a: Vector3, b: Vector3): Float {
 
 // Given a local vector, this turns to that vector
 fun turnTowards(relativePosition: Vector3): StickPosition =
-        StickPosition(
-                pitch = if (relativePosition.z > 0f) 1f else -1f,
-                yaw = if (relativePosition.x > 0f) 1f else -1f,
-                roll = if (relativePosition.x > 0f) 1f else -1f
-        )
+    StickPosition(
+        pitch = if (relativePosition.z > 0f) 1f else -1f,
+        yaw = if (relativePosition.x > 0f) 1f else -1f,
+        roll = if (relativePosition.x > 0f) 1f else -1f
+    )
 
 
 data class StickPosition(
-        var pitch: Float,
-        var yaw: Float,
-        var roll: Float
+    var pitch: Float,
+    var yaw: Float,
+    var roll: Float
 )
 
 fun <T : Comparable<T>> limit(o: T, min: T, max: T): T {
@@ -73,19 +70,19 @@ fun <T : Comparable<T>> limit(o: T, min: T, max: T): T {
 
 // Used to find targets in the forward arc.
 fun findInForwardArc(
-        world: World,
-        us: Actor,
-        maxDist: Float? = null,
-        maxAngle: Float? = null
+    world: World,
+    us: Actor,
+    maxDist: Float? = null,
+    maxAngle: Float? = null
 ): List<Actor> {
     return world.actors.asSequence()
-            .filter { it != us }
-            .filter {
-                maxDist == null || it.position.dst(us.position) < maxDist
-            }
-            .filter {
-                maxAngle == null || us angleTo it < maxAngle
-            }.toList()
+        .filter { it != us }
+        .filter {
+            maxDist == null || it.position.dst(us.position) < maxDist
+        }
+        .filter {
+            maxAngle == null || us angleTo it < maxAngle
+        }.toList()
 }
 
 

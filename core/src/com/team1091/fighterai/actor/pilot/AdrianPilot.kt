@@ -24,23 +24,23 @@ class AdrianPilot : Pilot {
             val stickPosition = turnTowards(relativePosition)
 
             return PilotControl(
-                    stickPosition.pitch,
-                    stickPosition.yaw,
-                    stickPosition.roll,
-                    1f,
-                    false,
-                    false
+                stickPosition.pitch,
+                stickPosition.yaw,
+                stickPosition.roll,
+                1f,
+                false,
+                false
             )
         }
 
         // This just does loops
         return PilotControl(
-                0f,
-                0f,
-                1f,
-                1f,
-                false,
-                false
+            0f,
+            0f,
+            1f,
+            1f,
+            false,
+            false
         )
     }
 }
